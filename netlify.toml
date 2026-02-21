@@ -1,0 +1,87 @@
+[build]
+publish = "dist"
+command = "npm run build"
+
+[[headers]]
+for = "/*"
+[headers.values]
+Permissions-Policy = "interest-cohort=()"
+
+[[redirects]]
+from = "https://iamdeveloper.com/*"
+to = "https://www.nickyt.co/:splat"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://www.iamdeveloper.com/*"
+to = "https://www.nickyt.co/:splat"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://nickyt.online/*"
+to = "https://www.nickyt.co/socials/"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://www.nickyt.online/*"
+to = "https://www.nickyt.co/socials/"
+status = 301
+force = true
+
+[[redirects]]
+from = "/posts/*"
+to = "/blog/:splat"
+status = 301
+force = true
+
+[[redirects]]
+from = "/news"
+to = "https://OneTipAWeek.com"
+status = 302
+force = true
+
+[[redirects]]
+from = "https://vscodetips.com/"
+to = "https://nickyt.co"
+status = 301
+force = true
+
+# Thanks two Phils! https://www.hawksworx.com/blog/alias-your-mastodon-username-to-your-domain-with-one-netlify-config-setting/
+[[redirects]]
+from = "/.well-known/webfinger"
+to = "https://hachyderm.io/.well-known/webfinger?resource=acct:nickytonline@hachyderm.io"
+status = 200
+
+[[redirects]]
+from = "/slides/apollo-mcp-july-2025"
+to = "https://docs.google.com/presentation/d/e/2PACX-1vRt3EHmvKqC5QM3V9yjWk-IlExgeVx1JlRWBrBNX0XjXrheOieGNz9-R4Nq8vL1iinFtFnn0xI7JjoY/pub?start=false&loop=false&delayms=5000"
+status = 301
+force = true
+
+[[redirects]]
+from = "/fresh-demo"
+to = "https://fresh-demo.nickytonline.deno.net/"
+status = 301
+force = true
+
+[[redirects]]
+from = "/bsides2025"
+to = "https://docs.google.com/presentation/d/e/2PACX-1vTbLPEshdJJvFgmnmvqlsQDbYmgqgSnK4BTOEPrubl5zF9NGSib_6ltEsHfPhNvmAfwct-erWA3hO7o/pub?start=false&loop=false&delayms=5000"
+status = 301
+force = true
+
+[[redirects]]
+from = "/cyc2025"
+to = "https://docs.google.com/presentation/d/e/2PACX-1vSxw2QZXhKQ-tjmbm5RYSDfB28pXvLx-x_TW-e6Ucy2MrGqK2IvQ_O3ChJbK33TPisV0D4NvVJ8A9-9/pub?start=false&loop=false&delayms=5000"
+status = 301
+force = true
+
+# old page urls redirects
+[[redirects]]
+from = "/pages/*"
+to = "/:splat"
+status = 301
+force = true

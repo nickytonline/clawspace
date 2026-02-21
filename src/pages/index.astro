@@ -1,0 +1,127 @@
+---
+import WorkspaceLayout from "../layouts/WorkspaceLayout.astro";
+import fs from "fs";
+import path from "path";
+
+// Workspace root - parent of workspace-astro (override with CLAWSPACE_ROOT)
+const WORKSPACE_ROOT = path.resolve(
+  process.env.CLAWSPACE_ROOT ?? path.resolve(process.cwd(), "..")
+);
+
+// Internal workspace files (never served)
+const INTERNAL_FILES = [
+  "SOUL.md",
+  "AGENTS.md",
+  "IDENTITY.md",
+  "USER.md",
+  "NICK.md",
+  "MEMORY.md",
+  "HEARTBEAT.md",
+  "TOOLS.md",
+  "BOOTSTRAP.md",
+  ".env",
+];
+
+// Read .gitignore patterns
+function getIgnoredPatterns() {
+  const gitignorePath = path.join(WORKSPACE_ROOT, ".gitignore");
+  let ignoredPatterns = [".git", "workspace-astro", ".pi"];
+
+  if (fs.existsSync(gitignorePath)) {
+    const content = fs.readFileSync(gitignorePath, "utf8");
+    ignoredPatterns = ignoredPatterns.concat(
+      content
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line && !line.startsWith("#"))
+        .map((pattern) => pattern.replace(/\/$/, ""))
+    );
+  }
+
+  return ignoredPatterns;
+}
+
+// Check if path should be ignored
+function shouldIgnore(relativePath: string, ignoredPatterns: string[]) {
+  // Block internal files at root level
+  if (!relativePath.includes("/") && INTERNAL_FILES.includes(relativePath)) {
+    return true;
+  }
+
+  // Check .gitignore patterns
+  for (const pattern of ignoredPatterns) {
+    if (relativePath.includes(pattern) || relativePath.startsWith(pattern)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+const ignoredPatterns = getIgnoredPatterns();
+
+// Build root directory listing
+const files = fs.readdirSync(WORKSPACE_ROOT, { withFileTypes: true });
+const items = files
+  .filter((file) => !shouldIgnore(file.name, ignoredPatterns))
+  .map((file) => ({
+    name: file.name,
+    type: file.isDirectory() ? "directory" : "file",
+    path: file.name,
+  }))
+  .sort((a, b) => {
+    if (a.type !== b.type) return a.type === "directory" ? -1 : 1;
+    return a.name.localeCompare(b.name);
+  });
+---
+
+<WorkspaceLayout
+  title="📁 Workspace"
+  metaDesc="Browse workspace files"
+  breadcrumbs={[]}
+>
+  <div class="workspace-browser">
+    <div
+      class="welcome-message mb-8 p-6 bg-gradient-to-r from-red-50 to-red-50 dark:from-red-900/20 dark:to-red-900/20 rounded-lg border border-red-200 dark:border-red-800"
+    >
+      <h1 class="text-2xl font-bold mb-3">Welcome to your Clawspace!</h1>
+      <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+        Browse all your workspace files and folders in one place. Internal
+        configuration files (like <code
+          class="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-sm"
+          >SOUL.md</code
+        >,
+        <code class="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-sm"
+          >MEMORY.md</code
+        >, etc.) are kept private and won't show up here.
+      </p>
+    </div>
+
+    <ul class="space-y-2">
+      {
+        items.map((item) => (
+          <li class="border-b border-gray-200 dark:border-gray-700 pb-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+            <a
+              href={`/${item.path}`}
+              data-astro-reload={item.type === "file" ? true : undefined}
+              class="flex items-center text-red-600 dark:text-red-400 hover:underline"
+            >
+              <span class="text-xl mr-2">
+                {item.type === "directory" ? "📂" : "📄"}
+              </span>
+              <span>
+                {item.name}
+                {item.type === "directory" ? "/" : ""}
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    {
+      items.length === 0 && (
+        <p class="text-gray-500 dark:text-gray-400 italic">Empty directory</p>
+      )
+    }
+  </div>
+</WorkspaceLayout>

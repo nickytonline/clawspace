@@ -1,0 +1,281 @@
+---
+import WorkspaceLayout from "../layouts/WorkspaceLayout.astro";
+import CodeViewer from "../components/CodeViewer.astro";
+import fs from "fs";
+import path from "path";
+
+// Workspace root - parent of workspace-astro (override with CLAWSPACE_ROOT)
+const WORKSPACE_ROOT = path.resolve(
+  process.env.CLAWSPACE_ROOT ?? path.resolve(process.cwd(), "..")
+);
+
+// Internal workspace files (never served)
+const INTERNAL_FILES = [
+  "SOUL.md",
+  "AGENTS.md",
+  "IDENTITY.md",
+  "USER.md",
+  "NICK.md",
+  "MEMORY.md",
+  "HEARTBEAT.md",
+  "TOOLS.md",
+  "BOOTSTRAP.md",
+  ".env",
+];
+
+// Read .gitignore patterns
+function getIgnoredPatterns() {
+  const gitignorePath = path.join(WORKSPACE_ROOT, ".gitignore");
+  let ignoredPatterns = [".git", "workspace-astro", ".pi"];
+
+  if (fs.existsSync(gitignorePath)) {
+    const content = fs.readFileSync(gitignorePath, "utf8");
+    ignoredPatterns = ignoredPatterns.concat(
+      content
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line && !line.startsWith("#"))
+        .map((pattern) => pattern.replace(/\/$/, ""))
+    );
+  }
+
+  return ignoredPatterns;
+}
+
+// Check if path should be ignored
+function shouldIgnore(relativePath: string, ignoredPatterns: string[]) {
+  const normalizedPath = relativePath
+    .replace(/\\/g, "/")
+    .replace(/^\/+|\/+$/g, "");
+
+  // Block internal files at root level
+  if (
+    !normalizedPath.includes("/") &&
+    INTERNAL_FILES.includes(normalizedPath)
+  ) {
+    return true;
+  }
+
+  // Check .gitignore-like patterns (segment/prefix matching, not substring)
+  for (const rawPattern of ignoredPatterns) {
+    const pattern = rawPattern
+      .replace(/\\/g, "/")
+      .replace(/^\/+|\/+$/g, "")
+      .trim();
+
+    if (!pattern) continue;
+
+    if (pattern.includes("/")) {
+      // Treat slash patterns as path prefixes from workspace root
+      if (
+        normalizedPath === pattern ||
+        normalizedPath.startsWith(`${pattern}/`)
+      ) {
+        return true;
+      }
+      continue;
+    }
+
+    // Treat plain names as path segments (e.g., "node_modules", "dist")
+    const segments = normalizedPath.split("/").filter(Boolean);
+    if (segments.includes(pattern)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Get path from URL
+const pathParam = Astro.params.path || "";
+const relativePath = pathParam.replace(/^\//, "");
+const absolutePath = path.join(WORKSPACE_ROOT, relativePath);
+
+// Security: prevent path traversal
+if (!absolutePath.startsWith(WORKSPACE_ROOT)) {
+  return Astro.redirect("/");
+}
+
+const ignoredPatterns = getIgnoredPatterns();
+
+// Check if path should be ignored
+if (shouldIgnore(relativePath, ignoredPatterns)) {
+  return new Response("Forbidden", { status: 403 });
+}
+
+// Check if file/directory exists
+if (!fs.existsSync(absolutePath)) {
+  return new Response("Not Found", { status: 404 });
+}
+
+const stats = fs.statSync(absolutePath);
+
+// Handle files
+let isFile = false;
+let fileContent = "";
+let fileName = "";
+let fileExt = "";
+
+if (stats.isFile()) {
+  isFile = true;
+  fileName = path.basename(absolutePath);
+  fileExt = path.extname(absolutePath);
+
+  // Binary files - serve directly
+  const binaryExts = [
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".gif",
+    ".svg",
+    ".pdf",
+    ".zip",
+    ".tar",
+    ".gz",
+    ".ico",
+    ".webp",
+  ];
+
+  if (binaryExts.includes(fileExt)) {
+    const content = fs.readFileSync(absolutePath);
+    const contentTypes: Record<string, string> = {
+      ".png": "image/png",
+      ".jpg": "image/jpeg",
+      ".jpeg": "image/jpeg",
+      ".gif": "image/gif",
+      ".svg": "image/svg+xml",
+      ".webp": "image/webp",
+      ".pdf": "application/pdf",
+      ".zip": "application/zip",
+      ".tar": "application/x-tar",
+      ".gz": "application/gzip",
+      ".ico": "image/x-icon",
+    };
+
+    return new Response(content, {
+      headers: {
+        "Content-Type": contentTypes[fileExt] || "application/octet-stream",
+      },
+    });
+  }
+
+  // Text-based files - render in template
+  fileContent = fs.readFileSync(absolutePath, "utf-8");
+}
+
+// Handle directories
+let items: Array<{ name: string; type: string; path: string }> = [];
+
+if (!isFile) {
+  const files = fs.readdirSync(absolutePath, { withFileTypes: true });
+  items = files
+    .filter(
+      (file) =>
+        !shouldIgnore(path.join(relativePath, file.name), ignoredPatterns)
+    )
+    .map((file) => ({
+      name: file.name,
+      type: file.isDirectory() ? "directory" : "file",
+      path: path.join(relativePath, file.name),
+    }))
+    .sort((a, b) => {
+      if (a.type !== b.type) return a.type === "directory" ? -1 : 1;
+      return a.name.localeCompare(b.name);
+    });
+}
+
+const title = isFile ? `📄 ${fileName}` : `📁 ${relativePath || "Workspace"}`;
+
+// Language mapping for syntax highlighting
+const languageMap: Record<string, string> = {
+  ".js": "javascript",
+  ".mjs": "javascript",
+  ".cjs": "javascript",
+  ".ts": "typescript",
+  ".tsx": "typescript",
+  ".jsx": "javascript",
+  ".json": "json",
+  ".md": "markdown",
+  ".yaml": "yaml",
+  ".yml": "yaml",
+  ".css": "css",
+  ".scss": "scss",
+  ".html": "html",
+  ".sh": "bash",
+  ".bash": "bash",
+  ".py": "python",
+  ".rb": "ruby",
+  ".go": "go",
+  ".rs": "rust",
+  ".java": "java",
+  ".xml": "xml",
+  ".sql": "sql",
+  ".txt": "text",
+};
+
+const language = languageMap[fileExt] || "text";
+
+// Build breadcrumbs (include workspace root)
+const breadcrumbs: Array<{ label: string; href: string }> = [
+  { label: "Workspace", href: "/" },
+];
+
+if (relativePath) {
+  const pathParts = relativePath.split("/");
+  let currentPath = "";
+
+  pathParts.forEach((part) => {
+    currentPath += (currentPath ? "/" : "") + part;
+    breadcrumbs.push({
+      label: part,
+      href: `/${currentPath}`,
+    });
+  });
+}
+---
+
+<WorkspaceLayout
+  title={title}
+  metaDesc={`Browse ${title}`}
+  breadcrumbs={breadcrumbs}
+>
+  <div class="workspace-browser">
+    {
+      isFile ? (
+        <div class="file-viewer">
+          <CodeViewer
+            code={fileContent}
+            language={language}
+            filename={fileName}
+            filePath={relativePath}
+          />
+        </div>
+      ) : (
+        <ul class="space-y-2">
+          {items.map((item) => (
+            <li class="border-b border-gray-200 dark:border-gray-700 pb-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+              <a
+                href={`/${item.path}`}
+                data-astro-reload={item.type === "file" ? true : undefined}
+                class="flex items-center text-red-600 dark:text-red-400 hover:underline"
+              >
+                <span class="text-xl mr-2">
+                  {item.type === "directory" ? "📂" : "📄"}
+                </span>
+                <span>
+                  {item.name}
+                  {item.type === "directory" ? "/" : ""}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    {
+      !isFile && items.length === 0 && (
+        <p class="text-gray-500 dark:text-gray-400 italic">Empty directory</p>
+      )
+    }
+  </div>
+</WorkspaceLayout>

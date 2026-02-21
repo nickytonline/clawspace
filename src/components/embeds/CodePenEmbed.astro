@@ -1,0 +1,52 @@
+---
+interface Props {
+  url: string;
+}
+
+const { url } = Astro.props;
+const urlObj = new URL(url);
+const { pathname } = urlObj;
+const [, user, , codepenId] = pathname.split("/");
+---
+
+<div class="w-full max-w-4xl mx-auto" data-embed>
+  <p
+    class="codepen flex items-center justify-center border-2 border-solid my-4 p-4"
+    data-height="500"
+    data-theme-id="dark"
+    data-default-tab="js,result"
+    data-user={user}
+    data-slug-hash={codepenId}
+    style="height: 500px; box-sizing: border-box;"
+    data-pen-title={`${codepenId} by @${user}`}
+  >
+    <span>
+      See the Pen <a href={url}>{url}</a> by {user} (<a
+        href={`https://codepen.io/${user}`}>@{user}</a
+      >) on <a href="https://codepen.io">CodePen</a>.
+    </span>
+  </p>
+</div>
+<script>
+  function loadCodePen() {
+    const scriptSrc = "https://static.codepen.io/assets/embed/ei.js";
+    if (!document.querySelector(`script[src*="codepen.io/assets/embed"]`)) {
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = scriptSrc;
+      document.head.appendChild(script);
+    } else {
+      const cpEmbed = (window as Window & { __CPEmbed?: () => void }).__CPEmbed;
+      if (cpEmbed) {
+        // Re-process embeds if script already loaded
+        cpEmbed();
+      }
+    }
+  }
+
+  // Load on initial page load
+  loadCodePen();
+
+  // Re-run on View Transitions
+  document.addEventListener("astro:page-load", loadCodePen);
+</script>

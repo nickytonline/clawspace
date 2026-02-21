@@ -1,0 +1,136 @@
+---
+import ThemeToggle from "./ThemeToggle.astro";
+import Search from "./Search";
+
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.slice(1);
+---
+
+<header class="pt-6 pb-6 max-w-7xl mx-auto px-6 transition-colors">
+  <div
+    class="flex flex-col items-center md:md:items-start md:flex-row gap-6 justify-between"
+  >
+    <div class="flex flex-col gap-6 items-center md:items-start">
+      <h1
+        class="font-heading md:text-6xl lg:text-8xl font-medium"
+        transition:name="header-logo"
+      >
+        nickyt<span class="text-red-600">.</span>co
+      </h1>
+      <nav
+        aria-label="main navigation"
+        class="mt-2 text-xl md:text-2xl lg:text-3xl"
+      >
+        <ul class="list-none flex gap-6 place-content-center flex-wrap">
+          <li>
+            <a
+              href="/"
+              aria-current={currentPath === "" ? "page" : "false"}
+              class="nav-link">Home</a
+            >
+          </li>
+          <li>
+            <a
+              href="/blog"
+              aria-current={currentPath.startsWith("blog") ? "page" : "false"}
+              class="nav-link"
+            >
+              Blog
+            </a>
+          </li>
+          <li>
+            <a
+              href="/talks"
+              aria-current={currentPath.startsWith("talks") ? "page" : "false"}
+              class="nav-link"
+            >
+              Talks
+            </a>
+          </li>
+          <li>
+            <a
+              href="/watch"
+              aria-current={currentPath.startsWith("watch") ? "page" : "false"}
+              class="nav-link"
+            >
+              Watch
+            </a>
+          </li>
+          <li>
+            <a
+              href="/projects"
+              aria-current={currentPath.startsWith("projects")
+                ? "page"
+                : "false"}
+              class="nav-link"
+            >
+              Projects
+            </a>
+          </li>
+          <li>
+            <a
+              href="/newsletter"
+              aria-current={currentPath.startsWith("newsletter")
+                ? "page"
+                : "false"}
+              class="nav-link">Newsletter</a
+            >
+          </li>
+          <li>
+            <a
+              href="/socials"
+              class="nav-link"
+              aria-current={currentPath.startsWith("socials")
+                ? "page"
+                : "false"}
+            >
+              Socials
+            </a>
+          </li>
+          <li>
+            <a
+              href="/uses"
+              class="nav-link"
+              aria-current={currentPath.startsWith("uses") ? "page" : "false"}
+              >Uses
+            </a>
+          </li>
+          <li>
+            <a
+              href="/about"
+              class="nav-link"
+              aria-current={currentPath.startsWith("about") ? "page" : "false"}
+              >About
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="flex items-center gap-4">
+      <a
+        href="/feed.xml"
+        class="inline-flex hover:text-red-600 hover:dark:text-red-400 focus:text-red-600 focus:dark:text-red-400 focus:outline-none"
+        target="_blank"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          class="w-4.5 h-4.5 lg:w-5 lg:h-5"
+        >
+          <path d="M4 11a9 9 0 0 1 9 9"></path>
+          <path d="M4 4a16 16 0 0 1 16 16"></path>
+          <circle cx="5" cy="19" r="1"></circle>
+        </svg>
+        <span class="sr-only">Subscribe via RSS Feed</span>
+      </a>
+      <Search client:load transition:persist />
+      <ThemeToggle transition:persist />
+    </div>
+  </div>
+</header>

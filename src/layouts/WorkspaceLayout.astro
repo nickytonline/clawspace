@@ -1,0 +1,239 @@
+---
+import "../styles/global.css";
+import OgMetaTags from "../components/OgMetaTags.astro";
+import SkipLink from "../components/SkipLink.astro";
+import site from "@/data/site";
+import { ClientRouter } from "astro:transitions";
+
+interface Props {
+  title: string;
+  metaDesc?: string;
+  socialImage?: string;
+  breadcrumbs?: Array<{ label: string; href: string }>;
+}
+
+const {
+  title,
+  metaDesc = "Browse workspace files",
+  socialImage = "/assets/images/page-og/home.jpg",
+  breadcrumbs = [],
+} = Astro.props;
+const { origin } = new URL(Astro.request.url);
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={metaDesc} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href={site.faviconPath} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="generator" content={Astro.generator} />
+    <OgMetaTags
+      title={title}
+      description={metaDesc}
+      socialImage={new URL(socialImage, origin).href}
+    />
+    <title>{title}</title>
+    <ClientRouter />
+    <!-- Prevent flash of unstyled content -->
+    <script is:inline>
+      // Check for saved theme preference or default to system preference
+      const theme = (() => {
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("theme")
+        ) {
+          return localStorage.getItem("theme");
+        }
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          return "dark";
+        }
+        return "light";
+      })();
+
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+
+      document.addEventListener("astro:before-swap", (ev) => {
+        if (localStorage.getItem("theme") === "dark") {
+          ev.newDocument.documentElement.classList.add("dark");
+        } else {
+          ev.newDocument.documentElement.classList.remove("dark");
+        }
+      });
+    </script>
+  </head>
+  <body class="pb-32 font-sans bg-background text-foreground">
+    <SkipLink id="main" />
+    <div>
+      <!-- Simple header with theme toggle -->
+      <header
+        class="border-b border-gray-200 dark:border-gray-700 bg-background"
+      >
+        <div
+          class="max-w-[65ch] lg:max-w-[70ch] mx-auto px-6 py-4 flex justify-between items-center"
+        >
+          <div class="flex items-center gap-6">
+            <a
+              href="/"
+              class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors no-underline"
+            >
+              <span class="text-2xl">🦞</span>
+              <span class="font-semibold">Clawspace</span>
+            </a>
+          </div>
+          <button
+            id="theme-toggle"
+            type="button"
+            aria-label="Toggle dark mode"
+            class="inline-flex hover:text-red-600 hover:dark:text-red-400 focus:text-red-600 focus:dark:text-red-400 focus:outline-none"
+          >
+            <svg
+              id="theme-toggle-dark-icon"
+              class="hidden w-6 h-6"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+              ></path>
+            </svg>
+            <svg
+              id="theme-toggle-light-icon"
+              class="hidden w-6 h-6"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                fill-rule="evenodd"
+                clip-rule="evenodd"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Breadcrumbs -->
+      {
+        breadcrumbs.length > 0 && (
+          <nav class="max-w-[65ch] lg:max-w-[70ch] mx-auto px-6 py-3 border-b border-gray-200 dark:border-gray-700">
+            <ol class="flex items-center gap-2 text-sm">
+              {breadcrumbs.map((crumb, index) => (
+                <li class="flex items-center gap-2">
+                  {index > 0 && <span class="text-gray-400">/</span>}
+                  {index === breadcrumbs.length - 1 ? (
+                    <span class="text-gray-600 dark:text-gray-400 font-medium">
+                      {crumb.label}
+                    </span>
+                  ) : (
+                    <a
+                      href={crumb.href}
+                      class="text-red-600 dark:text-red-400 hover:underline"
+                    >
+                      {crumb.label}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )
+      }
+
+      <main
+        id="main"
+        tabindex="-1"
+        class="max-w-[65ch] lg:max-w-[70ch] mx-auto px-6 py-12 text-base lg:text-lg"
+      >
+        <slot />
+      </main>
+
+      <footer
+        class="pt-2 pb-8 text-center px-1 text-sm text-gray-500 dark:text-gray-400"
+      >
+        made by <a
+          href="https://nickyt.online"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-red-600 dark:text-red-400 hover:underline"
+          >nickyt.online</a
+        >
+      </footer>
+    </div>
+
+    <script>
+      function initThemeToggle() {
+        setTimeout(() => {
+          const themeToggleDarkIcon = document.getElementById(
+            "theme-toggle-dark-icon"
+          );
+          const themeToggleLightIcon = document.getElementById(
+            "theme-toggle-light-icon"
+          );
+
+          if (!themeToggleDarkIcon || !themeToggleLightIcon) {
+            console.log("Theme icons not found");
+            return;
+          }
+
+          // Show the correct icon based on current theme
+          const isDark =
+            localStorage.getItem("theme") === "dark" ||
+            (!("theme" in localStorage) &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+          if (isDark) {
+            themeToggleLightIcon.classList.remove("hidden");
+            themeToggleDarkIcon.classList.add("hidden");
+          } else {
+            themeToggleDarkIcon.classList.remove("hidden");
+            themeToggleLightIcon.classList.add("hidden");
+          }
+
+          const themeToggleBtn = document.getElementById("theme-toggle");
+          if (!themeToggleBtn) return;
+
+          // Remove old listeners by cloning
+          const newButton = themeToggleBtn.cloneNode(true) as HTMLElement;
+          themeToggleBtn.parentNode?.replaceChild(newButton, themeToggleBtn);
+
+          newButton.addEventListener("click", function () {
+            const darkIcon = document.getElementById("theme-toggle-dark-icon");
+            const lightIcon = document.getElementById(
+              "theme-toggle-light-icon"
+            );
+
+            darkIcon?.classList.toggle("hidden");
+            lightIcon?.classList.toggle("hidden");
+
+            const currentTheme = localStorage.getItem("theme");
+            if (
+              currentTheme === "light" ||
+              (!currentTheme &&
+                !document.documentElement.classList.contains("dark"))
+            ) {
+              document.documentElement.classList.add("dark");
+              localStorage.setItem("theme", "dark");
+            } else {
+              document.documentElement.classList.remove("dark");
+              localStorage.setItem("theme", "light");
+            }
+          });
+        }, 0);
+      }
+
+      // Initial load
+      initThemeToggle();
+
+      // Astro view transitions
+      document.addEventListener("astro:page-load", initThemeToggle);
+    </script>
+  </body>
+</html>

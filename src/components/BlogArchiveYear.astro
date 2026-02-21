@@ -1,0 +1,50 @@
+---
+const { year, posts } = Astro.props;
+---
+
+<div data-pagefind-ignore>
+  <!-- Year Header -->
+  <div
+    class="mb-6 py-3 border-l-4 border-red-600 dark:border-red-400 pl-6 bg-linear-to-r from-rose-50 dark:from-red-900/20 to-transparent flex items-center"
+  >
+    <h2 class="text-4xl font-bold text-foreground leading-none">{year}</h2>
+  </div>
+
+  <!-- Posts List -->
+  <div class="space-y-1">
+    {
+      posts.map(
+        (post: {
+          url: string;
+          title: string;
+          date: string;
+          readTime: string;
+        }) => (
+          <div class="py-5 px-6">
+            <div class="flex items-baseline justify-between gap-6">
+              <div class="flex-1">
+                <h3 class="text-xl font-bold">
+                  <a
+                    href={post.url}
+                    class="text-foreground hover:text-red-600 hover:underline focus:text-red-600 focus:underline dark:hover:text-red-400 dark:focus:text-red-400 focus:outline-none"
+                  >
+                    {post.title}
+                  </a>
+                </h3>
+                <div class="flex items-center gap-4 text-muted-foreground mt-2">
+                  <span class="italic text-base">{post.date}</span>
+                  <span class="text-red-600 dark:text-red-400 font-semibold">
+                    •
+                  </span>
+                  <span class="text-base font-semibold text-red-600 dark:text-red-400">
+                    {post.readTime}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      )
+    }
+  </div>
+</div>

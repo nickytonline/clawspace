@@ -1,0 +1,161 @@
+---
+// Theme toggle component
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  aria-label="Toggle dark mode"
+  class="inline-flex hover:text-red-600 hover:dark:text-red-400 focus:text-red-600 focus:dark:text-red-400 focus:outline-none"
+>
+  <svg
+    id="theme-toggle-dark-icon"
+    class="hidden w-6 h-6"
+    fill="currentColor"
+    viewBox="0 0 20 20"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+    ></path>
+  </svg>
+  <svg
+    id="theme-toggle-light-icon"
+    class="hidden w-6 h-6"
+    fill="currentColor"
+    viewBox="0 0 20 20"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+      fill-rule="evenodd"
+      clip-rule="evenodd"></path>
+  </svg>
+</button>
+
+<script>
+  // Theme toggle functionality
+  const getThemePreference = (): string => {
+    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+      return localStorage.getItem("theme")!;
+    }
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  };
+
+  const setTheme = (theme: string, container: ParentNode = document): void => {
+    const html = document.documentElement;
+    const darkIcon = container.querySelector("#theme-toggle-dark-icon");
+    const lightIcon = container.querySelector("#theme-toggle-light-icon");
+
+    if (theme === "dark") {
+      html.classList.add("dark");
+      darkIcon?.classList.remove("hidden");
+      lightIcon?.classList.add("hidden");
+    } else {
+      html.classList.remove("dark");
+      lightIcon?.classList.remove("hidden");
+      darkIcon?.classList.add("hidden");
+    }
+
+    const monacoTheme = theme === "dark" ? "vs-dark" : "vs";
+
+    type MonacoEditorState = {
+      monaco?: boolean;
+      editor?: {
+        updateOptions?: (opts: { theme: string }) => void;
+        getDomNode?: () => { classList?: DOMTokenList } | null;
+        layout?: () => void;
+      };
+    };
+
+    type MonacoThemeState = { current?: string };
+
+    type MonacoWindow = Window & {
+      monaco?: { editor?: { setTheme?: (theme: string) => void } };
+      __clawspaceMonacoThemeState?: MonacoThemeState;
+      __clawspaceEditorStates?: Set<MonacoEditorState>;
+      __clawspaceReinitEditors?: () => void;
+    };
+
+    const w = window as MonacoWindow;
+
+    if (w.monaco?.editor?.setTheme) {
+      w.monaco.editor.setTheme(monacoTheme);
+    }
+
+    if (w.__clawspaceMonacoThemeState) {
+      w.__clawspaceMonacoThemeState.current = monacoTheme;
+    }
+
+    if (w.__clawspaceEditorStates) {
+      w.__clawspaceEditorStates.forEach((state) => {
+        if (state?.monaco && state?.editor) {
+          try {
+            if (state.editor.updateOptions) {
+              state.editor.updateOptions({ theme: monacoTheme });
+            }
+            if (state.editor.getDomNode) {
+              const node = state.editor.getDomNode();
+              if (node?.classList) {
+                node.classList.remove("vs", "vs-dark");
+                node.classList.add(monacoTheme);
+              }
+            }
+            state.editor.layout?.();
+          } catch (_err) {
+            /* noop */
+          }
+        }
+      });
+    }
+
+    if (w.__clawspaceReinitEditors) {
+      try {
+        w.__clawspaceReinitEditors();
+      } catch (_err) {
+        /* noop */
+      }
+    }
+
+    document.dispatchEvent(
+      new CustomEvent("clawspace:theme-change", { detail: { theme } })
+    );
+  };
+
+  const initThemeToggle = () => {
+    const themeToggle = document.getElementById("theme-toggle");
+
+    if (themeToggle?.dataset.initialized === "true") {
+      return;
+    }
+
+    setTheme(getThemePreference());
+
+    themeToggle?.addEventListener("click", () => {
+      const html = document.documentElement;
+      const currentTheme = html.classList.contains("dark") ? "dark" : "light";
+      const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+      setTheme(newTheme);
+      localStorage.setItem("theme", newTheme);
+    });
+
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        if (!localStorage.getItem("theme")) {
+          setTheme(e.matches ? "dark" : "light");
+        }
+      });
+
+    if (themeToggle) {
+      themeToggle.dataset.initialized = "true";
+    }
+  };
+
+  initThemeToggle();
+
+  // Re-initialize after navigation (will skip if already initialized)
+  document.addEventListener("astro:page-load", initThemeToggle);
+</script>
