@@ -1,0 +1,51 @@
+---
+interface Props {
+  url: string;
+}
+
+const { url } = Astro.props;
+
+let instagramUrl: URL;
+
+if (url.startsWith("http")) {
+  instagramUrl = new URL(url);
+} else {
+  instagramUrl = new URL(url, "https://www.instagram.com/p/");
+}
+---
+
+<div class="flex justify-center w-full my-8" data-embed>
+  <blockquote
+    class="instagram-media"
+    style="margin: 0 auto;"
+    data-instgrm-permalink={instagramUrl.toString()}
+    data-instgrm-version="14"
+  >
+    <a href={url}>View this post on Instagram</a>
+  </blockquote>
+</div>
+<script>
+  function loadInstagram() {
+    const scriptSrc = "//www.instagram.com/embed.js";
+    if (!document.querySelector(`script[src*="instagram.com/embed.js"]`)) {
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = scriptSrc;
+      document.head.appendChild(script);
+    } else {
+      const instgrm = (
+        window as Window & { instgrm?: { Embeds: { process: () => void } } }
+      ).instgrm;
+      if (instgrm) {
+        // Re-process embeds if script already loaded
+        instgrm.Embeds.process();
+      }
+    }
+  }
+
+  // Initial load
+  loadInstagram();
+
+  // Re-run on View Transitions
+  document.addEventListener("astro:page-load", loadInstagram);
+</script>

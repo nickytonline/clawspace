@@ -1,0 +1,26 @@
+---
+import Tag from "./Tag.astro";
+
+/**
+ * A component for displaying talk tags with links to tag pages
+ */
+export interface Props {
+  tags: string[];
+  limit?: number;
+  showMore?: boolean;
+}
+
+const { tags = [], limit, showMore = true } = Astro.props;
+
+const displayTags = limit ? tags.slice(0, limit) : tags;
+const hasMoreTags = showMore && limit && tags.length > limit;
+---
+
+<div class="flex flex-wrap gap-2 items-center">
+  {displayTags.map((tag) => <Tag tag={tag} />)}
+  {
+    hasMoreTags && (
+      <span class="text-sm text-gray-500">+{tags.length - limit} more</span>
+    )
+  }
+</div>

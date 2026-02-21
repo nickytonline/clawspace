@@ -1,0 +1,45 @@
+---
+import "lite-youtube-embed/src/lite-yt-embed.css";
+
+interface Props {
+  videoId: string;
+  startTime?: string;
+  title?: string;
+}
+
+const { videoId, startTime, title: providedTitle } = Astro.props;
+
+// Use provided title or fetch from YouTube oEmbed API
+let title = providedTitle || "YouTube Video";
+if (!providedTitle) {
+  try {
+    const response = await fetch(
+      `https://www.youtube.com/oembed?url=http://www.youtube.com/watch?v%3D${videoId}&format=json`
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      title = data.title;
+    }
+  } catch (error) {
+    console.error(`Failed to fetch YouTube title for ${videoId}:`, error);
+  }
+}
+
+const params = startTime ? `start=${startTime}` : "";
+---
+
+<div class="max-w-4xl mx-auto" data-embed>
+  <lite-youtube
+    videoid={videoId}
+    params={params}
+    playlabel={title}
+    class="rounded-lg overflow-hidden bg-secondary w-full"
+    style="aspect-ratio: 16 / 9;"
+  >
+  </lite-youtube>
+</div>
+
+<script>
+  import "lite-youtube-embed";
+</script>

@@ -1,0 +1,92 @@
+{
+  "name": "clawspace",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Clawspace - browser file explorer/editor for OpenClaw workspaces",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "npm run format:check && astro check && astro build && pagefind --site dist",
+    "preview": "astro preview",
+    "astro": "astro",
+    "format": "prettier --write . && eslint --fix .",
+    "format:check": "prettier --check . && eslint --max-warnings 0 .",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "clawspace:build": "./scripts/build.sh",
+    "clawspace:serve": "./scripts/serve.sh"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/netlify": "^6.6.4",
+    "@astrojs/node": "^9.5.3",
+    "@astrojs/react": "^4.4.2",
+    "@astrojs/rss": "^4.0.15",
+    "@astrojs/sitemap": "^3.7.0",
+    "@expressive-code/plugin-line-numbers": "^0.41.6",
+    "@fontsource/inter": "^5.2.8",
+    "@fontsource/space-grotesk": "^5.2.10",
+    "@types/react": "^19.2.13",
+    "@types/react-dom": "^19.2.3",
+    "@varlock/astro-integration": "^0.1.0",
+    "astro": "^5.17.1",
+    "astro-expressive-code": "^0.41.6",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "geist": "^1.7.0",
+    "lite-youtube-embed": "^0.3.4",
+    "lucide-react": "^0.563.0",
+    "luxon": "^3.7.2",
+    "marked": "^17.0.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-slug": "^6.0.0",
+    "remark-directive": "^4.0.0",
+    "rss-parser": "^3.13.0",
+    "tailwind-merge": "^3.4.0",
+    "typescript": "^5.6.0",
+    "unist-util-visit": "^5.1.0",
+    "varlock": "^0.1.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/js-yaml": "^4.0.9",
+    "@types/jsdom": "^27.0.0",
+    "@types/luxon": "^3.7.1",
+    "@types/node": "^25.0.3",
+    "dotenv": "^17.2.3",
+    "eslint": "^9.39.2",
+    "eslint-plugin-astro": "^1.5.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "globals": "^17.3.0",
+    "js-yaml": "^4.1.1",
+    "jsdom": "^27.4.0",
+    "pagefind": "^1.4.0",
+    "prettier": "^3.8.1",
+    "prettier-plugin-astro": "^0.14.1",
+    "slugify": "^1.6.6",
+    "tailwindcss": "^4.1.18",
+    "typescript-eslint": "^8.54.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nickytonline/nickytdotco"
+  },
+  "keywords": [
+    "astro",
+    "blog",
+    "personal-website"
+  ],
+  "author": "Nick Taylor",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nickytonline/nickytdotco/issues"
+  },
+  "homepage": "https://www.nickyt.co"
+}

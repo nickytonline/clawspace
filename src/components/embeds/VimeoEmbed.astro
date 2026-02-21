@@ -1,0 +1,33 @@
+---
+interface Props {
+  videoId: string;
+  autoplay?: boolean;
+  controls?: boolean;
+  loop?: boolean;
+}
+
+const {
+  videoId,
+  autoplay = false,
+  controls = true,
+  loop = false,
+} = Astro.props;
+
+const autoplayParam = autoplay ? 1 : 0;
+const controlsParam = controls ? 1 : 0;
+const loopParam = loop ? 1 : 0;
+
+const src = `https://player.vimeo.com/video/${videoId}?autoplay=${autoplayParam}&controls=${controlsParam}&loop=${loopParam}`;
+---
+
+<div class="relative max-w-4xl mx-auto aspect-video" data-embed>
+  <iframe
+    src={src}
+    width="640"
+    height="360"
+    class="absolute inset-0 w-full h-full border-0"
+    allow="autoplay; fullscreen; picture-in-picture"
+    allowfullscreen
+    loading="lazy"
+    title={`Vimeo video ${videoId}`}></iframe>
+</div>
