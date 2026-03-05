@@ -172,7 +172,7 @@ h6:hover .heading-anchor {
 
 body {
   @apply font-normal;
-  @apply text-sm;
+  @apply text-base;
   @apply lg:text-xl;
   @apply bg-background;
   @apply text-foreground;

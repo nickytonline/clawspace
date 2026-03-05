@@ -20,7 +20,7 @@ const hasMoreTags = showMore && limit && tags.length > limit;
   {displayTags.map((tag) => <Tag tag={tag} />)}
   {
     hasMoreTags && (
-      <span class="text-sm text-gray-500">+{tags.length - limit} more</span>
+      <span class="text-base text-gray-500">+{tags.length - limit} more</span>
     )
   }
 </div>

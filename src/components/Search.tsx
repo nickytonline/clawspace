@@ -192,15 +192,15 @@ const Search = () => {
 
         <div className="max-h-[60vh] overflow-y-auto p-4">
           {import.meta.env.DEV && (
-            <div className="bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 p-4 rounded-md mb-4 text-center text-sm border border-amber-200 dark:border-amber-800">
+            <div className="bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 p-4 rounded-md mb-4 text-center text-base border border-amber-200 dark:border-amber-800">
               Note: Search results are only available after a production build.
             </div>
           )}
 
           {results.length > 0 && (
-            <div className="flex justify-between items-baseline mb-4 px-2 text-sm text-muted-foreground">
+            <div className="flex justify-between items-baseline mb-4 px-2 text-base text-muted-foreground">
               <span>{totalResults} results found</span>
-              <kbd className="hidden sm:inline-block px-1.5 py-0.5 border border-secondary rounded bg-muted font-sans text-xs">
+              <kbd className="hidden sm:inline-block px-1.5 py-0.5 border border-secondary rounded bg-muted font-sans text-base">
                 ESC to close
               </kbd>
             </div>
@@ -235,12 +235,12 @@ const Search = () => {
                             {result.meta.title}
                           </h3>
                           <p
-                            className="text-sm text-muted-foreground line-clamp-2 mt-1"
+                            className="text-base text-muted-foreground line-clamp-2 mt-1"
                             dangerouslySetInnerHTML={{ __html: result.excerpt }}
                           />
                         </div>
                         {type && (
-                          <span className="shrink-0 text-[10px] uppercase tracking-wider font-bold bg-muted px-2 py-0.5 rounded-full text-muted-foreground border border-secondary">
+                          <span className="shrink-0 text-base uppercase tracking-wider font-bold bg-muted px-2 py-0.5 rounded-full text-muted-foreground border border-secondary">
                             {type}
                           </span>
                         )}
@@ -257,7 +257,7 @@ const Search = () => {
                   <p className="text-lg font-semibold text-amber-600 dark:text-amber-400">
                     Search is unavailable in development
                   </p>
-                  <p className="text-sm max-w-md mx-auto">
+                  <p className="text-base max-w-md mx-auto">
                     Pagefind indexes your site during the production build. To
                     test search locally, run:
                     <code className="block mt-2 p-2 bg-secondary rounded text-foreground">
@@ -268,7 +268,7 @@ const Search = () => {
               ) : (
                 <div className="space-y-2">
                   <p className="text-lg">No results found for "{query}"</p>
-                  <p className="text-sm">Try searching for something else.</p>
+                  <p className="text-base">Try searching for something else.</p>
                 </div>
               )}
             </div>
@@ -279,11 +279,11 @@ const Search = () => {
               </div>
               <div className="text-center">
                 <p className="text-lg font-medium">Search the site</p>
-                <p className="text-sm">
+                <p className="text-base">
                   Search for blog posts, talks, projects, and more
                 </p>
               </div>
-              <div className="flex gap-4 pt-4 text-xs">
+              <div className="flex gap-4 pt-4 text-base">
                 <span className="flex items-center gap-1">
                   <kbd className="px-1 py-0.5 bg-muted border border-secondary rounded">
                     &uarr;&darr;
