@@ -15,11 +15,11 @@ const { code, language, filename, filePath = "" } = Astro.props;
   data-language={language}
 >
   <div class="code-header">
-    <span class="filename">{filename}</span>
+    <span class="filename text-base">{filename}</span>
     <div class="actions">
       <div class="settings-menu">
         <button
-          class="settings-button"
+          class="settings-button text-base"
           aria-label="Editor settings"
           title="Settings"
           onclick="toggleEditorSettings(this)"
@@ -45,7 +45,7 @@ const { code, language, filename, filePath = "" } = Astro.props;
           <span class="sr-only">Settings</span>
         </button>
         <div class="settings-panel hidden">
-          <label class="settings-item">
+          <label class="settings-item text-base">
             <input
               type="checkbox"
               class="setting-word-wrap"
@@ -53,10 +53,20 @@ const { code, language, filename, filePath = "" } = Astro.props;
             />
             Word wrap
           </label>
+          <label class="settings-item setting-markdown-default-row hidden text-base">
+            Default markdown view
+            <select
+              class="setting-markdown-default text-base"
+              onchange="toggleMarkdownDefaultView(this)"
+            >
+              <option value="edit">Edit</option>
+              <option value="preview">Preview</option>
+            </select>
+          </label>
         </div>
       </div>
       <button
-        class="save-button"
+        class="save-button text-base"
         aria-label="Save file"
         title="Save"
         onclick="saveEditor(this)"
@@ -83,7 +93,7 @@ const { code, language, filename, filePath = "" } = Astro.props;
         <span class="sr-only">Save</span>
       </button>
       <button
-        class="revert-button"
+        class="revert-button text-base"
         aria-label="Revert changes"
         title="Revert"
         onclick="revertEditor(this)"
@@ -107,7 +117,7 @@ const { code, language, filename, filePath = "" } = Astro.props;
         <span class="sr-only">Revert</span>
       </button>
       <button
-        class="copy-button"
+        class="copy-button text-base"
         aria-label="Copy to clipboard"
         title="Copy"
         onclick="copyToClipboard(this)"
@@ -148,8 +158,31 @@ const { code, language, filename, filePath = "" } = Astro.props;
     </div>
   </div>
   <div class="code-content">
-    <div class="editor" style="height: 70vh"></div>
-    <textarea class="editor-fallback hidden">{code}</textarea>
+    <div class="editor-tabs hidden">
+      <button
+        type="button"
+        class="editor-tab is-active text-base"
+        data-tab="edit"
+        onclick="switchEditorTab(this, 'edit')"
+      >
+        Edit
+      </button>
+      <button
+        type="button"
+        class="editor-tab text-base"
+        data-tab="preview"
+        onclick="switchEditorTab(this, 'preview')"
+      >
+        Preview
+      </button>
+    </div>
+    <div class="editor-pane" data-pane="edit">
+      <div class="editor" style="height: 70vh"></div>
+      <textarea class="editor-fallback hidden text-base">{code}</textarea>
+    </div>
+    <div class="markdown-preview hidden" data-pane="preview">
+      <div class="markdown-preview-content"></div>
+    </div>
   </div>
 </div>
 
@@ -183,7 +216,7 @@ const { code, language, filename, filePath = "" } = Astro.props;
   .filename {
     font-family:
       ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: 0.875rem;
+    font-size: 1rem;
     color: rgb(75 85 99);
   }
 
@@ -206,7 +239,7 @@ const { code, language, filename, filePath = "" } = Astro.props;
     justify-content: center;
     gap: 0.375rem;
     padding: 0.375rem 0.625rem;
-    font-size: 0.875rem;
+    font-size: 1rem;
     border-radius: 0.375rem;
     border: 1px solid rgb(209 213 219);
     background: white;
@@ -272,7 +305,7 @@ const { code, language, filename, filePath = "" } = Astro.props;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.875rem;
+    font-size: 1rem;
     color: rgb(55 65 81);
     cursor: pointer;
   }
@@ -285,12 +318,94 @@ const { code, language, filename, filePath = "" } = Astro.props;
     padding: 1rem;
   }
 
+  .editor-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .editor-tab {
+    border: 1px solid rgb(209 213 219);
+    background: white;
+    color: rgb(75 85 99);
+    border-radius: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .editor-tab.is-active {
+    border-color: rgb(59 130 246);
+    color: rgb(29 78 216);
+    background: rgb(239 246 255);
+  }
+
+  :global(.dark) .editor-tab {
+    background: rgb(55 65 81);
+    border-color: rgb(75 85 99);
+    color: rgb(209 213 219);
+  }
+
+  :global(.dark) .editor-tab.is-active {
+    background: rgb(30 41 59);
+    border-color: rgb(96 165 250);
+    color: rgb(147 197 253);
+  }
+
+  .markdown-preview {
+    min-height: 70vh;
+    margin-top: 0;
+    border: 1px solid rgb(209 213 219);
+    border-radius: 0.375rem;
+    padding: 1rem;
+    background: rgb(255 255 255);
+    color: rgb(31 41 55);
+    overflow-wrap: anywhere;
+  }
+
+  .markdown-preview-content :global(h1),
+  .markdown-preview-content :global(h2),
+  .markdown-preview-content :global(h3) {
+    margin-top: 1.1em;
+    margin-bottom: 0.4em;
+  }
+
+  .markdown-preview-content :global(p),
+  .markdown-preview-content :global(ul),
+  .markdown-preview-content :global(ol),
+  .markdown-preview-content :global(pre),
+  .markdown-preview-content :global(blockquote) {
+    margin: 0.5em 0;
+  }
+
+  .markdown-preview-content :global(pre) {
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    background: rgb(243 244 246);
+    overflow-x: auto;
+  }
+
+  .markdown-preview-content :global(code) {
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  :global(.dark) .markdown-preview {
+    background: rgb(17 24 39);
+    color: rgb(229 231 235);
+    border-color: rgb(75 85 99);
+  }
+
+  :global(.dark) .markdown-preview-content :global(pre) {
+    background: rgb(30 41 59);
+  }
+
   .editor-fallback {
     width: 100%;
     min-height: 70vh;
     font-family:
       ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: 0.875rem;
+    font-size: 1rem;
     border: 1px solid rgb(209 213 219);
     border-radius: 0.375rem;
     padding: 0.75rem;
@@ -372,6 +487,18 @@ const { code, language, filename, filePath = "" } = Astro.props;
   .hidden {
     display: none;
   }
+
+  @media (max-width: 768px) {
+    .code-viewer .settings-item,
+    .code-viewer .editor-tab,
+    .code-viewer .settings-button,
+    .code-viewer .save-button,
+    .code-viewer .revert-button,
+    .code-viewer .copy-button,
+    .code-viewer :is(input, select, textarea) {
+      font-size: 16px;
+    }
+  }
 </style>
 
 <script is:inline>
@@ -408,6 +535,12 @@ const { code, language, filename, filePath = "" } = Astro.props;
   };
 
   const editorSettingsStorageKey = "clawspace.editor.settings.v1";
+
+  function getMobileSafeFontSize() {
+    if (typeof window === "undefined") return 14;
+    return window.matchMedia("(max-width: 768px)").matches ? 16 : 14;
+  }
+  let markedLibPromise = null;
 
   const monacoThemeState = window.__clawspaceMonacoThemeState || {
     current: null,
@@ -448,11 +581,17 @@ const { code, language, filename, filePath = "" } = Astro.props;
   }
 
   function getEditorSettings() {
-    const defaults = { wordWrap: true };
+    const defaults = { wordWrap: true, markdownDefaultView: "edit" };
     try {
       const raw = localStorage.getItem(editorSettingsStorageKey);
       if (!raw) return defaults;
-      return { ...defaults, ...JSON.parse(raw) };
+      const parsed = JSON.parse(raw) || {};
+      const markdownDefaultView =
+        parsed.markdownDefaultView === "preview" ? "preview" : "edit";
+      return {
+        wordWrap: parsed.wordWrap ?? defaults.wordWrap,
+        markdownDefaultView,
+      };
     } catch {
       return defaults;
     }
@@ -481,10 +620,109 @@ const { code, language, filename, filePath = "" } = Astro.props;
     }
   }
 
+  function isMarkdownRoot(root) {
+    return getRawLanguage(root) === "markdown";
+  }
+
+  function getDefaultMarkdownTab(settings = getEditorSettings()) {
+    return settings?.markdownDefaultView === "preview" ? "preview" : "edit";
+  }
+
   function syncSettingsPanel(root, settings) {
     const wordWrap = root?.querySelector(".setting-word-wrap");
     if (wordWrap) {
       wordWrap.checked = Boolean(settings?.wordWrap);
+    }
+
+    const markdownDefaultRow = root?.querySelector(
+      ".setting-markdown-default-row"
+    );
+    const markdownDefault = root?.querySelector(".setting-markdown-default");
+    const isMarkdown = isMarkdownRoot(root);
+
+    if (markdownDefaultRow) {
+      markdownDefaultRow.classList.toggle("hidden", !isMarkdown);
+    }
+
+    if (markdownDefault) {
+      markdownDefault.value = getDefaultMarkdownTab(settings);
+    }
+  }
+
+  async function ensureMarked() {
+    if (window.marked) return window.marked;
+    if (!markedLibPromise) {
+      markedLibPromise = import("https://esm.sh/marked@12.0.2").then(
+        (mod) => mod.marked
+      );
+    }
+    const marked = await markedLibPromise;
+    window.marked = marked;
+    return marked;
+  }
+
+  function sanitizePreviewAnchors(root) {
+    root?.querySelectorAll("a[href]").forEach((a) => {
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener noreferrer");
+    });
+  }
+
+  async function renderMarkdownPreview(root, state) {
+    if (!isMarkdownRoot(root)) return;
+    const container = root?.querySelector(".markdown-preview-content");
+    if (!container) return;
+
+    try {
+      const marked = await ensureMarked();
+      const content = getCurrentContent(root, state);
+      container.innerHTML = marked.parse(content || "");
+      sanitizePreviewAnchors(container);
+    } catch {
+      container.textContent = getCurrentContent(root, state);
+    }
+  }
+
+  function setEditorTab(root, tab) {
+    const tabs = root?.querySelectorAll(".editor-tab");
+    const editPane = root?.querySelector('.editor-pane[data-pane="edit"]');
+    const previewPane = root?.querySelector(
+      '.markdown-preview[data-pane="preview"]'
+    );
+
+    const isPreview = tab === "preview";
+
+    tabs?.forEach((btn) => {
+      btn.classList.toggle("is-active", btn.getAttribute("data-tab") === tab);
+    });
+
+    if (editPane) editPane.classList.toggle("hidden", isPreview);
+    if (previewPane) previewPane.classList.toggle("hidden", !isPreview);
+
+    if (isPreview) {
+      renderMarkdownPreview(root, editors.get(root));
+    }
+  }
+
+  function applyMarkdownPreview(root, state) {
+    const tabs = root?.querySelector(".editor-tabs");
+    const previewPane = root?.querySelector(
+      '.markdown-preview[data-pane="preview"]'
+    );
+    if (!tabs || !previewPane) return;
+
+    const showTabs = isMarkdownRoot(root);
+    tabs.classList.toggle("hidden", !showTabs);
+
+    if (!showTabs) {
+      setEditorTab(root, "edit");
+      return;
+    }
+
+    const defaultTab = getDefaultMarkdownTab();
+    setEditorTab(root, defaultTab);
+    if (state && defaultTab === "preview") {
+      renderMarkdownPreview(root, state);
     }
   }
 
@@ -639,6 +877,7 @@ const { code, language, filename, filePath = "" } = Astro.props;
         automaticLayout: true,
         minimap: { enabled: false },
         wordWrap: settings.wordWrap ? "on" : "off",
+        fontSize: getMobileSafeFontSize(),
         theme,
       });
 
@@ -659,6 +898,9 @@ const { code, language, filename, filePath = "" } = Astro.props;
       });
       editor.onDidChangeModelContent(() => {
         clearEditorMarkers(editors.get(root));
+        if (isMarkdownRoot(root)) {
+          renderMarkdownPreview(root, editors.get(root));
+        }
       });
 
       let resizeObserver = null;
@@ -682,16 +924,23 @@ const { code, language, filename, filePath = "" } = Astro.props;
       editors.set(root, state);
       editorStates.add(state);
       applyWordWrap(root, state, settings.wordWrap);
+      applyMarkdownPreview(root, state);
     } catch {
       editorEl.classList.add("hidden");
       fallback.classList.remove("hidden");
       fallback.addEventListener("blur", () => {
         formatRoot(root, { silent: true });
       });
+      fallback.addEventListener("input", () => {
+        if (isMarkdownRoot(root)) {
+          renderMarkdownPreview(root, editors.get(root));
+        }
+      });
       const state = { monaco: false, original: initialText };
       editors.set(root, state);
       editorStates.add(state);
       applyWordWrap(root, state, settings.wordWrap);
+      applyMarkdownPreview(root, state);
     }
   }
 
@@ -718,6 +967,22 @@ const { code, language, filename, filePath = "" } = Astro.props;
     const state = editors.get(root);
     const settings = setEditorSettings({ wordWrap: input.checked });
     applyWordWrap(root, state, settings.wordWrap);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  function toggleMarkdownDefaultView(select) {
+    const root = select.closest(".code-viewer");
+    const state = editors.get(root);
+    const settings = setEditorSettings({ markdownDefaultView: select.value });
+    applyMarkdownPreview(root, state);
+    syncSettingsPanel(root, settings);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  function switchEditorTab(button, tab) {
+    const root = button.closest(".code-viewer");
+    if (!isMarkdownRoot(root)) return;
+    setEditorTab(root, tab);
   }
 
   document.addEventListener("click", (event) => {
@@ -816,6 +1081,7 @@ const { code, language, filename, filePath = "" } = Astro.props;
         editorStates.forEach((state) => {
           if (state?.monaco && state?.editor) {
             try {
+              state.editor.updateOptions({ fontSize: getMobileSafeFontSize() });
               state.editor.layout();
             } catch (_err) {
               /* noop */
