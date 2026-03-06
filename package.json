@@ -76,19 +76,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nickytonline/nickytdotco"
+    "url": "git+https://github.com/nickytonline/clawspace.git"
   },
   "keywords": [
     "astro",
-    "blog",
-    "personal-website"
+    "workspace",
+    "file-browser",
+    "code-editor"
   ],
   "author": "Nick Taylor",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nickytonline/nickytdotco/issues"
+    "url": "https://github.com/nickytonline/clawspace/issues"
   },
-  "homepage": "https://www.nickyt.co",
+  "homepage": "https://github.com/nickytonline/clawspace#readme",
   "lint-staged": {
     "*.{js,jsx,ts,tsx,astro}": [
       "prettier --write",
