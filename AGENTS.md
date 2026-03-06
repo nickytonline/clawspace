@@ -16,6 +16,7 @@ This repo is Clawspace (workspace browser/editor), not Nick's personal site docs
 - `src/components/CodeViewer.astro` - Monaco editor UI + client behavior
 - `src/pages/api/files/save.ts` - file save API (hardening/audit)
 - `src/layouts/WorkspaceLayout.astro` - shell layout and nav
+- `src/lib/ignore.ts` - shared ignore-pattern logic (defaults, .gitignore, .clawspace-ignore, env vars)
 - `scripts/serve.sh` - production SSR server helper
 
 ## Commands
@@ -30,6 +31,24 @@ npm run clawspace:serve
 ## Git
 
 - Always use [Conventional Commits](https://www.conventionalcommits.org/) (e.g. `fix:`, `feat:`, `chore:`, `docs:`, `refactor:`).
+
+## Environment Variables
+
+| Variable           | Default              | Description                                                      |
+| ------------------ | -------------------- | ---------------------------------------------------------------- |
+| `CLAWSPACE_ROOT`   | `..` (parent of cwd) | Workspace root directory to browse/edit                          |
+| `CLAWSPACE_IGNORE` | _(empty)_            | Comma-separated extra ignore patterns (e.g. `".pnpm,dist,logs"`) |
+
+## Ignore Patterns
+
+Files and directories are hidden from browsing and blocked from the save API using patterns from (all merged):
+
+1. **Hardcoded defaults** — `.git`, `node_modules`, `.pnpm`, `.cache`, `.DS_Store`, `.astro`, `workspace-astro`, `.pi`
+2. **`.gitignore`** at workspace root
+3. **`.clawspace-ignore`** at workspace root — same format as `.gitignore`, for user-specific patterns
+4. **`CLAWSPACE_IGNORE`** env var — comma-separated patterns
+
+For Docker users without a `.gitignore`, the defaults cover common cases. Add a `.clawspace-ignore` file to the mounted workspace volume or set `CLAWSPACE_IGNORE` for additional patterns.
 
 ## Implementation Rules
 

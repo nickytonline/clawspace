@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
+import { getIgnoredPatterns, shouldIgnore } from "../../../lib/ignore";
 
 const WORKSPACE_ROOT = path.resolve(
   process.env.CLAWSPACE_ROOT ?? path.resolve(process.cwd(), "..")
@@ -20,19 +21,6 @@ const ALLOWED_ORIGIN_HOSTS = new Set(
     .filter(Boolean)
 );
 
-const INTERNAL_FILES = [
-  "SOUL.md",
-  "AGENTS.md",
-  "IDENTITY.md",
-  "USER.md",
-  "NICK.md",
-  "MEMORY.md",
-  "HEARTBEAT.md",
-  "TOOLS.md",
-  "BOOTSTRAP.md",
-  ".env",
-];
-
 function json(status: number, payload: Record<string, unknown>) {
   return new Response(JSON.stringify(payload), {
     status,
@@ -41,62 +29,6 @@ function json(status: number, payload: Record<string, unknown>) {
       "cache-control": "no-store",
     },
   });
-}
-
-function getIgnoredPatterns() {
-  const gitignorePath = path.join(WORKSPACE_ROOT, ".gitignore");
-  let ignoredPatterns = [".git", "workspace-astro", ".pi"];
-
-  if (fs.existsSync(gitignorePath)) {
-    const content = fs.readFileSync(gitignorePath, "utf8");
-    ignoredPatterns = ignoredPatterns.concat(
-      content
-        .split("\n")
-        .map((line) => line.trim())
-        .filter((line) => line && !line.startsWith("#"))
-        .map((pattern) => pattern.replace(/\/$/, ""))
-    );
-  }
-
-  return ignoredPatterns;
-}
-
-function shouldIgnore(relativePath: string, ignoredPatterns: string[]) {
-  const normalizedPath = relativePath
-    .replace(/\\/g, "/")
-    .replace(/^\/+|\/+$/g, "");
-
-  if (
-    !normalizedPath.includes("/") &&
-    INTERNAL_FILES.includes(normalizedPath)
-  ) {
-    return true;
-  }
-
-  for (const rawPattern of ignoredPatterns) {
-    const pattern = rawPattern
-      .replace(/\\/g, "/")
-      .replace(/^\/+|\/+$/g, "")
-      .trim();
-    if (!pattern) continue;
-
-    if (pattern.includes("/")) {
-      if (
-        normalizedPath === pattern ||
-        normalizedPath.startsWith(`${pattern}/`)
-      ) {
-        return true;
-      }
-      continue;
-    }
-
-    const segments = normalizedPath.split("/").filter(Boolean);
-    if (segments.includes(pattern)) {
-      return true;
-    }
-  }
-
-  return false;
 }
 
 function getExpectedHosts(request: Request): Set<string> {
@@ -237,7 +169,7 @@ export const POST: APIRoute = async ({ request }) => {
       return json(400, { error: "Invalid path" });
     }
 
-    const ignoredPatterns = getIgnoredPatterns();
+    const ignoredPatterns = getIgnoredPatterns(WORKSPACE_ROOT);
     if (shouldIgnore(relativePath, ignoredPatterns)) {
       return json(403, { error: "Forbidden" });
     }

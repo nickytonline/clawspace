@@ -1,6 +1,7 @@
 ---
 import WorkspaceLayout from "../layouts/WorkspaceLayout.astro";
 import CodeViewer from "../components/CodeViewer.astro";
+import { getIgnoredPatterns, shouldIgnore } from "../lib/ignore";
 import fs from "fs";
 import path from "path";
 
@@ -8,82 +9,6 @@ import path from "path";
 const WORKSPACE_ROOT = path.resolve(
   process.env.CLAWSPACE_ROOT ?? path.resolve(process.cwd(), "..")
 );
-
-// Internal workspace files (never served)
-const INTERNAL_FILES = [
-  "SOUL.md",
-  "AGENTS.md",
-  "IDENTITY.md",
-  "USER.md",
-  "NICK.md",
-  "MEMORY.md",
-  "HEARTBEAT.md",
-  "TOOLS.md",
-  "BOOTSTRAP.md",
-  ".env",
-];
-
-// Read .gitignore patterns
-function getIgnoredPatterns() {
-  const gitignorePath = path.join(WORKSPACE_ROOT, ".gitignore");
-  let ignoredPatterns = [".git", "workspace-astro", ".pi"];
-
-  if (fs.existsSync(gitignorePath)) {
-    const content = fs.readFileSync(gitignorePath, "utf8");
-    ignoredPatterns = ignoredPatterns.concat(
-      content
-        .split("\n")
-        .map((line) => line.trim())
-        .filter((line) => line && !line.startsWith("#"))
-        .map((pattern) => pattern.replace(/\/$/, ""))
-    );
-  }
-
-  return ignoredPatterns;
-}
-
-// Check if path should be ignored
-function shouldIgnore(relativePath: string, ignoredPatterns: string[]) {
-  const normalizedPath = relativePath
-    .replace(/\\/g, "/")
-    .replace(/^\/+|\/+$/g, "");
-
-  // Block internal files at root level
-  if (
-    !normalizedPath.includes("/") &&
-    INTERNAL_FILES.includes(normalizedPath)
-  ) {
-    return true;
-  }
-
-  // Check .gitignore-like patterns (segment/prefix matching, not substring)
-  for (const rawPattern of ignoredPatterns) {
-    const pattern = rawPattern
-      .replace(/\\/g, "/")
-      .replace(/^\/+|\/+$/g, "")
-      .trim();
-
-    if (!pattern) continue;
-
-    if (pattern.includes("/")) {
-      // Treat slash patterns as path prefixes from workspace root
-      if (
-        normalizedPath === pattern ||
-        normalizedPath.startsWith(`${pattern}/`)
-      ) {
-        return true;
-      }
-      continue;
-    }
-
-    // Treat plain names as path segments (e.g., "node_modules", "dist")
-    const segments = normalizedPath.split("/").filter(Boolean);
-    if (segments.includes(pattern)) {
-      return true;
-    }
-  }
-  return false;
-}
 
 // Get path from URL
 const pathParam = Astro.params.path || "";
@@ -95,7 +20,7 @@ if (!absolutePath.startsWith(WORKSPACE_ROOT)) {
   return Astro.redirect("/");
 }
 
-const ignoredPatterns = getIgnoredPatterns();
+const ignoredPatterns = getIgnoredPatterns(WORKSPACE_ROOT);
 
 // Check if path should be ignored
 if (shouldIgnore(relativePath, ignoredPatterns)) {

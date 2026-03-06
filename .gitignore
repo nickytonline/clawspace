@@ -89,5 +89,8 @@ src/blog/.christmas-tunes-55i1.md
 # Claude Code local settings
 .claude/settings.local.json
 
+# Clawspace user ignore file
+.clawspace-ignore
+
 # Local generated uploads (do not commit)
 public/uploads/
