@@ -29,7 +29,7 @@ npm install
 ## Quick start
 
 ```bash
-npm run clawspace:build
+npm run build
 npm run clawspace:serve
 ```
 
@@ -53,9 +53,8 @@ CLAWSPACE_ROOT=/absolute/path/to/workspace
 
 ## Scripts
 
-- `npm run clawspace:build` → runs SSR build (`dist/server/entry.mjs`)
+- `npm run build` → runs SSR build (`dist/server/entry.mjs`)
 - `npm run clawspace:serve` → serves production SSR build on port 6789
-- `./scripts/build.sh` → same as above, shell entrypoint
 - `./scripts/serve.sh [port]` → serve on optional port
 
 ## OpenClaw integration

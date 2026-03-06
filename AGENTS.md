@@ -16,7 +16,6 @@ This repo is Clawspace (workspace browser/editor), not Nick's personal site docs
 - `src/components/CodeViewer.astro` - Monaco editor UI + client behavior
 - `src/pages/api/files/save.ts` - file save API (hardening/audit)
 - `src/layouts/WorkspaceLayout.astro` - shell layout and nav
-- `scripts/build.sh` - SSR build helper
 - `scripts/serve.sh` - production SSR server helper
 
 ## Commands
@@ -24,9 +23,13 @@ This repo is Clawspace (workspace browser/editor), not Nick's personal site docs
 ```bash
 npm install
 npm run dev
-npm run clawspace:build
+npm run build
 npm run clawspace:serve
 ```
+
+## Git
+
+- Always use [Conventional Commits](https://www.conventionalcommits.org/) (e.g. `fix:`, `feat:`, `chore:`, `docs:`, `refactor:`).
 
 ## Implementation Rules
 

@@ -16,8 +16,6 @@
     "format:check": "prettier --check . && eslint --max-warnings 0 .",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "clawspace:build": "./scripts/build.sh",
-    "clawspace:serve": "./scripts/serve.sh",
     "prepare": "husky"
   },
   "dependencies": {
