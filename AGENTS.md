@@ -34,10 +34,11 @@ npm run clawspace:serve
 
 ## Environment Variables
 
-| Variable           | Default              | Description                                                      |
-| ------------------ | -------------------- | ---------------------------------------------------------------- |
-| `CLAWSPACE_ROOT`   | `..` (parent of cwd) | Workspace root directory to browse/edit                          |
-| `CLAWSPACE_IGNORE` | _(empty)_            | Comma-separated extra ignore patterns (e.g. `".pnpm,dist,logs"`) |
+| Variable                   | Default              | Description                                                                 |
+| -------------------------- | -------------------- | --------------------------------------------------------------------------- |
+| `CLAWSPACE_ROOT`           | `..` (parent of cwd) | Workspace root directory to browse/edit                                     |
+| `CLAWSPACE_IGNORE`         | _(empty)_            | Comma-separated extra ignore patterns (e.g. `".pnpm,dist,logs"`)            |
+| `SHOW_INTERNAL_CLAW_FILES` | `false`              | Set to `true` to show internal files (`SOUL.md`, `MEMORY.md`, `.env`, etc.) |
 
 ## Ignore Patterns
 
@@ -53,7 +54,7 @@ For Docker users without a `.gitignore`, the defaults cover common cases. Add a 
 ## Implementation Rules
 
 1. **Never weaken path safety** in save API (no traversal/symlink escapes).
-2. **Do not expose internal files** (`SOUL.md`, `MEMORY.md`, `.env`, etc.).
+2. **Do not expose internal files** (`SOUL.md`, `MEMORY.md`, `.env`, etc.) unless `SHOW_INTERNAL_CLAW_FILES=true`.
 3. Keep editor UX simple: always-on Monaco, Save/Revert/Copy.
 4. Prefer inline Monaco markers for errors over alert spam.
 5. Keep workspace-root mapping assumptions explicit in docs.

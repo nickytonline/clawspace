@@ -68,8 +68,10 @@ export function shouldIgnore(
     .replace(/\\/g, "/")
     .replace(/^\/+|\/+$/g, "");
 
-  // Block internal files at root level
+  // Block internal files at root level (unless SHOW_INTERNAL_CLAW_FILES=true)
+  const showInternal = process.env.SHOW_INTERNAL_CLAW_FILES === "true";
   if (
+    !showInternal &&
     !normalizedPath.includes("/") &&
     INTERNAL_FILES.includes(normalizedPath)
   ) {
