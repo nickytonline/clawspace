@@ -9,3 +9,4 @@ src/pages/posts
 src/**/*.md
 *.mdx
 env.d.ts
+CHANGELOG.md
