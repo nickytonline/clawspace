@@ -6,8 +6,8 @@ This is Nick's personal site converted into a workspace file browser. It serves 
 
 - ✨ Beautiful UI with dark mode support
 - 📁 Directory browsing with icons
-- 🔒 Respects .gitignore patterns
-- 🚫 Blocks internal files (SOUL.md, AGENTS.md, etc.)
+- 🔒 Respects merged ignore patterns (`.gitignore`, `.clawspace-ignore`, env)
+- 🚫 Blocks internal files by default (`SOUL.md`, `AGENTS.md`, `.env`, etc.)
 - 🎨 Uses your personal site's styling and layout
 
 ## Quick Start
@@ -34,19 +34,34 @@ npm run preview
 
 ## Configuration
 
-The workspace root is set to `/claw/workspace` (parent of this directory). Files and folders are served dynamically from there.
+By default, Clawspace serves from the parent of this app directory. For nonstandard paths, set `CLAWSPACE_ROOT`.
 
-Internal files (never served):
+```bash
+CLAWSPACE_ROOT=/absolute/path/to/workspace
+CLAWSPACE_IGNORE=".pnpm,dist,logs"
+SHOW_INTERNAL_CLAW_FILES=false
+```
+
+Environment variables:
+
+| Variable                   | Default              | Description                                                                 |
+| -------------------------- | -------------------- | --------------------------------------------------------------------------- |
+| `CLAWSPACE_ROOT`           | `..` (parent of cwd) | Workspace root directory to browse/edit                                     |
+| `CLAWSPACE_IGNORE`         | _(empty)_            | Comma-separated extra ignore patterns (e.g. `".pnpm,dist,logs"`)            |
+| `SHOW_INTERNAL_CLAW_FILES` | `false`              | Set to `true` to show internal files (`SOUL.md`, `MEMORY.md`, `.env`, etc.) |
+
+Internal files are blocked at the root level unless `SHOW_INTERNAL_CLAW_FILES=true`:
 
 - SOUL.md, AGENTS.md, IDENTITY.md, USER.md, NICK.md
 - MEMORY.md, HEARTBEAT.md, TOOLS.md, BOOTSTRAP.md
 - .env
 
-Also ignores:
+Ignore patterns are merged from:
 
-- Everything in .gitignore
-- .git directory
-- workspace-astro directory (this folder itself)
+1. Hardcoded defaults (`.git`, `node_modules`, `.pnpm`, `.cache`, `.DS_Store`, `.astro`, `workspace-astro`, `.pi`)
+2. `.gitignore` at workspace root
+3. `.clawspace-ignore` at workspace root
+4. `CLAWSPACE_IGNORE` (comma-separated patterns)
 
 ## Replacing the Old Server
 

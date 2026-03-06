@@ -49,7 +49,26 @@ If you install it elsewhere, set `CLAWSPACE_ROOT` to an absolute path.
 ```bash
 # .env (see .env.example)
 CLAWSPACE_ROOT=/absolute/path/to/workspace
+CLAWSPACE_IGNORE=".pnpm,dist,logs"
+SHOW_INTERNAL_CLAW_FILES=false
 ```
+
+### Environment variables
+
+| Variable                   | Default              | Description                                                                 |
+| -------------------------- | -------------------- | --------------------------------------------------------------------------- |
+| `CLAWSPACE_ROOT`           | `..` (parent of cwd) | Workspace root directory to browse/edit                                     |
+| `CLAWSPACE_IGNORE`         | _(empty)_            | Comma-separated extra ignore patterns (e.g. `".pnpm,dist,logs"`)            |
+| `SHOW_INTERNAL_CLAW_FILES` | `false`              | Set to `true` to show internal files (`SOUL.md`, `MEMORY.md`, `.env`, etc.) |
+
+### Ignore patterns
+
+Files and directories are hidden from browsing and blocked from the save API using patterns from (all merged):
+
+1. **Hardcoded defaults**: `.git`, `node_modules`, `.pnpm`, `.cache`, `.DS_Store`, `.astro`, `workspace-astro`, `.pi`
+2. **`.gitignore`** at workspace root
+3. **`.clawspace-ignore`** at workspace root (same format as `.gitignore`)
+4. **`CLAWSPACE_IGNORE`** env var (comma-separated patterns)
 
 ## Scripts
 
@@ -76,6 +95,8 @@ clawspace:
   image: ghcr.io/nickytonline/clawspace:latest
   environment:
     CLAWSPACE_ROOT: /claw/workspace
+    CLAWSPACE_IGNORE: ".pnpm,dist,logs"
+    SHOW_INTERNAL_CLAW_FILES: "false"
   volumes:
     - ./openclaw-data/workspace:/claw/workspace
   ports:
@@ -92,6 +113,8 @@ Note: I keep Clawspace inside my workspace while I’m still iterating on it wit
 docker build -t clawspace:local .
 docker run -p 6789:6789 \
   -e CLAWSPACE_ROOT=/claw/workspace \
+  -e CLAWSPACE_IGNORE=".pnpm,dist,logs" \
+  -e SHOW_INTERNAL_CLAW_FILES=false \
   -v $(pwd)/openclaw-data/workspace:/claw/workspace \
   clawspace:local
 ```
