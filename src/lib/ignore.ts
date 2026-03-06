@@ -6,6 +6,7 @@ export const INTERNAL_FILES = [
   "AGENTS.md",
   "IDENTITY.md",
   "USER.md",
+  "NICK.md",
   "MEMORY.md",
   "HEARTBEAT.md",
   "TOOLS.md",

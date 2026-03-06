@@ -1,5 +1,6 @@
 ---
 import WorkspaceLayout from "../layouts/WorkspaceLayout.astro";
+import { getIgnoredPatterns, shouldIgnore } from "../lib/ignore";
 import fs from "fs";
 import path from "path";
 
@@ -8,56 +9,7 @@ const WORKSPACE_ROOT = path.resolve(
   process.env.CLAWSPACE_ROOT ?? path.resolve(process.cwd(), "..")
 );
 
-// Internal workspace files (never served)
-const INTERNAL_FILES = [
-  "SOUL.md",
-  "AGENTS.md",
-  "IDENTITY.md",
-  "USER.md",
-  "NICK.md",
-  "MEMORY.md",
-  "HEARTBEAT.md",
-  "TOOLS.md",
-  "BOOTSTRAP.md",
-  ".env",
-];
-
-// Read .gitignore patterns
-function getIgnoredPatterns() {
-  const gitignorePath = path.join(WORKSPACE_ROOT, ".gitignore");
-  let ignoredPatterns = [".git", "workspace-astro", ".pi"];
-
-  if (fs.existsSync(gitignorePath)) {
-    const content = fs.readFileSync(gitignorePath, "utf8");
-    ignoredPatterns = ignoredPatterns.concat(
-      content
-        .split("\n")
-        .map((line) => line.trim())
-        .filter((line) => line && !line.startsWith("#"))
-        .map((pattern) => pattern.replace(/\/$/, ""))
-    );
-  }
-
-  return ignoredPatterns;
-}
-
-// Check if path should be ignored
-function shouldIgnore(relativePath: string, ignoredPatterns: string[]) {
-  // Block internal files at root level
-  if (!relativePath.includes("/") && INTERNAL_FILES.includes(relativePath)) {
-    return true;
-  }
-
-  // Check .gitignore patterns
-  for (const pattern of ignoredPatterns) {
-    if (relativePath.includes(pattern) || relativePath.startsWith(pattern)) {
-      return true;
-    }
-  }
-  return false;
-}
-
-const ignoredPatterns = getIgnoredPatterns();
+const ignoredPatterns = getIgnoredPatterns(WORKSPACE_ROOT);
 
 // Build root directory listing
 const files = fs.readdirSync(WORKSPACE_ROOT, { withFileTypes: true });
