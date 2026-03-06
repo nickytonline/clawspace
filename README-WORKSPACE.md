@@ -68,3 +68,5 @@ To use this instead of the old Node.js server:
 ## Development
 
 Files are watched and hot-reloaded automatically in dev mode. The UI updates instantly when you make changes.
+
+> **Note:** Whenever we make changes to Clawspace, rebuild and restart Clawspace so updates are reflected in the running server.
