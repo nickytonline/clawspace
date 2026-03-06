@@ -5,7 +5,8 @@
       "release-type": "node",
       "changelog-path": "CHANGELOG.md",
       "pull-request-title-pattern": "chore: release v${version}",
-      "include-component-in-tag": false
+      "include-component-in-tag": false,
+      "release-as": "1.0.0"
     }
   }
 }
