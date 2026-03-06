@@ -19,5 +19,6 @@
   **Posted date:** 2026-02-23
 
 ## Notes
+
 - No clear new Senior/Staff Developer Advocate or hybrid DevRel/Engineering postings found this week that match all constraints.
 - Focused on US companies hiring in Canada, remote-friendly roles, and tooling/infra/security/AI-adjacent domains.
