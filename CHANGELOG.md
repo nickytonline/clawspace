@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/nickytonline/clawspace/compare/v1.0.0...v1.0.1) (2026-03-06)
+
+
+### Bug Fixes
+
+* **ignore:** apply .clawspace-ignore rules on root listing ([0f43bcb](https://github.com/nickytonline/clawspace/commit/0f43bcbef456e6d5bf3cf00691c991a3ed6adfb4))
+
 ## 1.0.0 (2026-03-06)
 
 
