@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.0](https://github.com/nickytonline/clawspace/compare/v1.0.1...v1.1.0) (2026-03-07)
+
+
+### Features
+
+* add a new logo ([ddc3f72](https://github.com/nickytonline/clawspace/commit/ddc3f725354e9d55da26c17d0d9b6258f105b0df))
+* add favicon ([ad20bc3](https://github.com/nickytonline/clawspace/commit/ad20bc3c52c5f1451d627e45bfbd809e049982a2))
+* **clawspace:** add guarded file/folder delete UX ([7ca0265](https://github.com/nickytonline/clawspace/commit/7ca02654f9d3e4848cae052285111e1017e258d6))
+
 ## [1.0.1](https://github.com/nickytonline/clawspace/compare/v1.0.0...v1.0.1) (2026-03-06)
 
 
