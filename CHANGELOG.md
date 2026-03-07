@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/nickytonline/clawspace/compare/v1.1.0...v1.2.0) (2026-03-07)
+
+
+### Features
+
+* animate lobster logo once after delayed page load ([5f0c2f2](https://github.com/nickytonline/clawspace/commit/5f0c2f22bdd2b6633dd19028e12b4de391072bf9))
+
 ## [1.1.0](https://github.com/nickytonline/clawspace/compare/v1.0.1...v1.1.0) (2026-03-07)
 
 
