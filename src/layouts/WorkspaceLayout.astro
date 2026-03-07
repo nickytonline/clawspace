@@ -60,6 +60,14 @@ const { origin } = new URL(Astro.request.url);
         document.documentElement.classList.remove("dark");
       }
 
+      const hasSeenLobsterAnimation =
+        typeof localStorage !== "undefined" &&
+        localStorage.getItem("clawspace-logo-lobster-animated-v3") === "true";
+
+      if (hasSeenLobsterAnimation) {
+        document.documentElement.classList.add("clawspace-logo-lobster-seen");
+      }
+
       document.addEventListener("astro:before-swap", (ev) => {
         if (localStorage.getItem("theme") === "dark") {
           ev.newDocument.documentElement.classList.add("dark");
@@ -84,11 +92,27 @@ const { origin } = new URL(Astro.request.url);
               href="/"
               class="flex items-center gap-2 text-base text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors no-underline"
             >
-              <img
-                src="/assets/logo.svg"
-                alt="Clawspace logo"
+              <svg
+                id="clawspace-logo"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 64 64"
+                role="img"
+                aria-label="Clawspace logo"
                 class="w-8 h-8 lg:w-12 lg:h-12"
-              />
+                style="--lobster-animation-delay: 1.5s"
+              >
+                <path d="M1 10h19l6 6h37v40H1z" fill="#F4B400"></path>
+                <g id="clawspace-logo-lobster-group">
+                  <text
+                    x="32"
+                    y="48"
+                    font-size="33"
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                    transform="rotate(90 36 40)">🦞</text
+                  >
+                </g>
+              </svg>
               <span class="font-semibold">Clawspace</span>
             </a>
           </div>
@@ -174,6 +198,58 @@ const { origin } = new URL(Astro.request.url);
     </div>
 
     <script>
+      let logoAnimationTimer: number | null = null;
+
+      function parseDurationToMs(value: string): number {
+        const parsed = value.trim();
+        if (parsed.endsWith("ms")) {
+          const ms = Number.parseFloat(parsed);
+          return Number.isFinite(ms) ? ms : 0;
+        }
+        if (parsed.endsWith("s")) {
+          const seconds = Number.parseFloat(parsed);
+          return Number.isFinite(seconds) ? seconds * 1000 : 0;
+        }
+        const fallback = Number.parseFloat(parsed);
+        return Number.isFinite(fallback) ? fallback : 0;
+      }
+
+      function initLogoAnimation() {
+        const logo = document.getElementById(
+          "clawspace-logo"
+        ) as SVGElement | null;
+        if (!logo) return;
+
+        const hasAnimatedKey = "clawspace-logo-lobster-animated-v3";
+
+        if (logoAnimationTimer) {
+          window.clearTimeout(logoAnimationTimer);
+          logoAnimationTimer = null;
+        }
+
+        logo.classList.remove("lobster-crawl-in");
+
+        if (localStorage.getItem(hasAnimatedKey) === "true") {
+          logo.classList.add("lobster-visible");
+          return;
+        }
+
+        logo.classList.remove("lobster-visible");
+
+        const delayValue = getComputedStyle(logo)
+          .getPropertyValue("--lobster-animation-delay")
+          .trim();
+        const delayMs = parseDurationToMs(delayValue || "1.5s");
+
+        logoAnimationTimer = window.setTimeout(() => {
+          localStorage.setItem(hasAnimatedKey, "true");
+          document.documentElement.classList.add("clawspace-logo-lobster-seen");
+          logo.classList.add("lobster-visible");
+          logo.classList.add("lobster-crawl-in");
+          logoAnimationTimer = null;
+        }, delayMs);
+      }
+
       function initThemeToggle() {
         setTimeout(() => {
           const themeToggleDarkIcon = document.getElementById(
@@ -235,10 +311,39 @@ const { origin } = new URL(Astro.request.url);
       }
 
       // Initial load
+      initLogoAnimation();
       initThemeToggle();
 
       // Astro view transitions
+      document.addEventListener("astro:page-load", initLogoAnimation);
       document.addEventListener("astro:page-load", initThemeToggle);
     </script>
+
+    <style>
+      #clawspace-logo #clawspace-logo-lobster-group {
+        opacity: 0;
+      }
+
+      .lobster-visible #clawspace-logo-lobster-group,
+      .clawspace-logo-lobster-seen
+        #clawspace-logo
+        #clawspace-logo-lobster-group {
+        opacity: 1;
+      }
+
+      .lobster-crawl-in #clawspace-logo-lobster-group {
+        animation: lobster-crawl-in 900ms ease-out both;
+      }
+
+      @keyframes lobster-crawl-in {
+        from {
+          transform: translateX(-40px);
+        }
+
+        to {
+          transform: translateX(0);
+        }
+      }
+    </style>
   </body>
 </html>

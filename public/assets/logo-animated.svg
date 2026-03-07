@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <path d="M1 10h19l6 6h37v40H1z" fill="#F4B400" />
+  <g>
+    <animateTransform attributeName="transform" type="translate" from="-40 0" to="0 0" dur="900ms" fill="freeze" />
+    <text x="32" y="48" font-size="33" text-anchor="middle" dominant-baseline="middle" transform="rotate(90 36 40)">🦞</text>
+  </g>
+</svg>
