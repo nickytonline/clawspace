@@ -40,18 +40,23 @@ const { origin } = new URL(Astro.request.url);
     <ClientRouter />
     <!-- Prevent flash of unstyled content -->
     <script is:inline>
+      const hasLocalStorage = typeof localStorage !== "undefined";
+      const defaultTheme = window.matchMedia("(prefers-color-scheme: dark)")
+        .matches
+        ? "dark"
+        : "light";
+
       // Check for saved theme preference or default to system preference
       const theme = (() => {
-        if (
-          typeof localStorage !== "undefined" &&
-          localStorage.getItem("theme")
-        ) {
+        if (!hasLocalStorage) {
+          return defaultTheme;
+        }
+
+        if (localStorage.getItem("theme")) {
           return localStorage.getItem("theme");
         }
-        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-          return "dark";
-        }
-        return "light";
+
+        return defaultTheme;
       })();
 
       if (theme === "dark") {
@@ -61,7 +66,7 @@ const { origin } = new URL(Astro.request.url);
       }
 
       const hasSeenLobsterAnimation =
-        typeof localStorage !== "undefined" &&
+        hasLocalStorage &&
         localStorage.getItem("clawspace-logo-lobster-animated-v3") === "true";
 
       if (hasSeenLobsterAnimation) {
@@ -69,7 +74,11 @@ const { origin } = new URL(Astro.request.url);
       }
 
       document.addEventListener("astro:before-swap", (ev) => {
-        if (localStorage.getItem("theme") === "dark") {
+        const savedTheme = hasLocalStorage
+          ? (localStorage.getItem("theme") ?? defaultTheme)
+          : defaultTheme;
+
+        if (savedTheme === "dark") {
           ev.newDocument.documentElement.classList.add("dark");
         } else {
           ev.newDocument.documentElement.classList.remove("dark");
