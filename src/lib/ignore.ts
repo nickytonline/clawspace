@@ -14,6 +14,8 @@ export const INTERNAL_FILES = [
   ".env",
 ];
 
+export const INTERNAL_PROTECTED_DIRECTORIES = ["memory"];
+
 const DEFAULT_PATTERNS = [
   ".git",
   "workspace-astro",
@@ -61,6 +63,26 @@ export function getIgnoredPatterns(workspaceRoot: string): string[] {
   return patterns;
 }
 
+export function isInternalProtectedPath(relativePath: string): boolean {
+  const normalizedPath = relativePath
+    .replace(/\\/g, "/")
+    .replace(/^\/+|\/+$/g, "");
+
+  if (!normalizedPath) return false;
+
+  // Root-level internal files
+  if (
+    !normalizedPath.includes("/") &&
+    INTERNAL_FILES.includes(normalizedPath)
+  ) {
+    return true;
+  }
+
+  // Root-level internal directories and all descendants
+  const rootSegment = normalizedPath.split("/")[0];
+  return INTERNAL_PROTECTED_DIRECTORIES.includes(rootSegment);
+}
+
 export function shouldIgnore(
   relativePath: string,
   ignoredPatterns: string[]
@@ -69,7 +91,8 @@ export function shouldIgnore(
     .replace(/\\/g, "/")
     .replace(/^\/+|\/+$/g, "");
 
-  // Block internal files at root level (unless SHOW_INTERNAL_CLAW_FILES=true)
+  // Block root-level internal files from browsing (unless SHOW_INTERNAL_CLAW_FILES=true)
+  // Note: protected delete-only directories (e.g. memory/) remain view/edit-able.
   const showInternal = process.env.SHOW_INTERNAL_CLAW_FILES === "true";
   if (
     !showInternal &&

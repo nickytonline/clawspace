@@ -1,6 +1,10 @@
 ---
 import WorkspaceLayout from "../layouts/WorkspaceLayout.astro";
-import { getIgnoredPatterns, shouldIgnore } from "../lib/ignore";
+import {
+  getIgnoredPatterns,
+  isInternalProtectedPath,
+  shouldIgnore,
+} from "../lib/ignore";
 import fs from "fs";
 import path from "path";
 
@@ -19,6 +23,7 @@ const items = files
     name: file.name,
     type: file.isDirectory() ? "directory" : "file",
     path: file.name,
+    canDelete: !isInternalProtectedPath(file.name),
   }))
   .sort((a, b) => {
     if (a.type !== b.type) return a.type === "directory" ? -1 : 1;
@@ -52,20 +57,52 @@ const items = files
     <ul class="space-y-2">
       {
         items.map((item) => (
-          <li class="border-b border-gray-200 dark:border-gray-700 pb-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-            <a
-              href={`/${item.path}`}
-              data-astro-reload={item.type === "file" ? true : undefined}
-              class="flex items-center text-red-600 dark:text-red-400 hover:underline"
-            >
-              <span class="text-xl mr-2">
-                {item.type === "directory" ? "📂" : "📄"}
-              </span>
-              <span>
-                {item.name}
-                {item.type === "directory" ? "/" : ""}
-              </span>
-            </a>
+          <li class="row-item px-2 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 focus-within:bg-gray-50 dark:focus-within:bg-gray-800 transition-colors">
+            <div class="flex items-center justify-between gap-3 py-2">
+              <a
+                href={`/${item.path}`}
+                data-astro-reload={item.type === "file" ? true : undefined}
+                class="row-link flex items-center text-red-600 dark:text-red-400 hover:underline min-w-0"
+              >
+                <span class="text-xl mr-2">
+                  {item.type === "directory" ? "📂" : "📄"}
+                </span>
+                <span class="truncate">
+                  {item.name}
+                  {item.type === "directory" ? "/" : ""}
+                </span>
+              </a>
+              {item.canDelete && (
+                <button
+                  type="button"
+                  class="delete-entry-btn row-delete-btn p-2 rounded border border-red-300 text-red-700 hover:bg-red-50 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-900/30"
+                  data-path={item.path}
+                  data-type={item.type}
+                  aria-label={`Delete ${item.type === "directory" ? "folder" : "file"} ${item.name}`}
+                  title="Delete"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M3 6h18" />
+                    <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                    <path d="M10 11v6" />
+                    <path d="M14 11v6" />
+                  </svg>
+                  <span class="sr-only">Delete</span>
+                </button>
+              )}
+            </div>
           </li>
         ))
       }
@@ -78,3 +115,65 @@ const items = files
     }
   </div>
 </WorkspaceLayout>
+
+<style is:inline>
+  .row-delete-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 120ms ease-in-out;
+  }
+
+  .row-item:hover .row-delete-btn,
+  .row-item:focus-within .row-delete-btn {
+    opacity: 1;
+    pointer-events: auto;
+  }
+</style>
+
+<script is:inline>
+  async function handleDelete(path, type, button) {
+    const kind = type === "directory" ? "folder" : "file";
+    const confirmed = confirm(
+      `Delete ${kind} "${path}"? This cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    button.disabled = true;
+
+    try {
+      const res = await fetch("/api/files/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path }),
+      });
+
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        alert(`Delete failed: ${payload.error || res.statusText}`);
+        return;
+      }
+
+      window.location.reload();
+    } catch (error) {
+      alert(`Delete failed: ${error?.message || error}`);
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  function bindDeleteButtons() {
+    document.querySelectorAll(".delete-entry-btn").forEach((button) => {
+      if (button.dataset.bound === "true") return;
+      button.dataset.bound = "true";
+      button.addEventListener("click", () => {
+        const path = button.getAttribute("data-path") || "";
+        const type = button.getAttribute("data-type") || "file";
+        if (!path) return;
+        handleDelete(path, type, button);
+      });
+    });
+  }
+
+  bindDeleteButtons();
+  document.addEventListener("astro:page-load", bindDeleteButtons);
+</script>

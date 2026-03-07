@@ -4,9 +4,16 @@ interface Props {
   language: string;
   filename: string;
   filePath?: string;
+  canDelete?: boolean;
 }
 
-const { code, language, filename, filePath = "" } = Astro.props;
+const {
+  code,
+  language,
+  filename,
+  filePath = "",
+  canDelete = true,
+} = Astro.props;
 ---
 
 <div
@@ -118,6 +125,37 @@ const { code, language, filename, filePath = "" } = Astro.props;
         </svg>
         <span class="sr-only">Revert</span>
       </button>
+      {
+        canDelete && (
+          <button
+            class="delete-button text-base"
+            aria-label="Delete file"
+            title="Delete"
+            onclick="deleteEditorFile(this)"
+          >
+            <svg
+              class="button-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 6h18" />
+              <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+              <path d="M10 11v6" />
+              <path d="M14 11v6" />
+            </svg>
+            <span class="sr-only">Delete</span>
+          </button>
+        )
+      }
       <button
         class="copy-button text-base"
         aria-label="Copy to clipboard"
@@ -235,6 +273,7 @@ const { code, language, filename, filePath = "" } = Astro.props;
   .copy-button,
   .save-button,
   .revert-button,
+  .delete-button,
   .settings-button {
     display: flex;
     align-items: center;
@@ -259,6 +298,7 @@ const { code, language, filename, filePath = "" } = Astro.props;
   .copy-button:hover,
   .save-button:hover,
   .revert-button:hover,
+  .delete-button:hover,
   .settings-button:hover {
     background: rgb(249 250 251);
     border-color: rgb(156 163 175);
@@ -267,6 +307,7 @@ const { code, language, filename, filePath = "" } = Astro.props;
   :global(.dark) .copy-button,
   :global(.dark) .save-button,
   :global(.dark) .revert-button,
+  :global(.dark) .delete-button,
   :global(.dark) .settings-button {
     background: rgb(55 65 81);
     border-color: rgb(75 85 99);
@@ -276,6 +317,7 @@ const { code, language, filename, filePath = "" } = Astro.props;
   :global(.dark) .copy-button:hover,
   :global(.dark) .save-button:hover,
   :global(.dark) .revert-button:hover,
+  :global(.dark) .delete-button:hover,
   :global(.dark) .settings-button:hover {
     background: rgb(75 85 99);
     border-color: rgb(107 114 128);
@@ -496,6 +538,7 @@ const { code, language, filename, filePath = "" } = Astro.props;
     .code-viewer .settings-button,
     .code-viewer .save-button,
     .code-viewer .revert-button,
+    .code-viewer .delete-button,
     .code-viewer .copy-button,
     .code-viewer :is(input, select, textarea) {
       font-size: 16px;
@@ -1022,6 +1065,46 @@ const { code, language, filename, filePath = "" } = Astro.props;
     }
     if (state) {
       state.original = content;
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async function deleteEditorFile(button) {
+    const root = getRootFromButton(button);
+    const filePath = root?.getAttribute("data-file-path") || "";
+    if (!root || !filePath) {
+      alert("Missing file path");
+      return;
+    }
+
+    const confirmed = confirm(
+      `Delete file "${filePath}"? This cannot be undone.`
+    );
+    if (!confirmed) return;
+
+    button.disabled = true;
+
+    try {
+      const res = await fetch("/api/files/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: filePath }),
+      });
+
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        alert(`Delete failed: ${payload.error || res.statusText}`);
+        return;
+      }
+
+      const segments = filePath.split("/").filter(Boolean);
+      segments.pop();
+      const parentPath = segments.length ? `/${segments.join("/")}` : "/";
+      window.location.href = parentPath;
+    } catch (error) {
+      alert(`Delete failed: ${error?.message || error}`);
+    } finally {
+      button.disabled = false;
     }
   }
 
