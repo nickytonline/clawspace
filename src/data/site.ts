@@ -23,7 +23,7 @@ export const site: SiteConfig = {
   authorName: "Nick Taylor",
   maxPostsPerPage: 2,
   paymentPointer: "$ilp.uphold.com/MZMhAWA7bkGa",
-  faviconPath: "/assets/images/favicon.svg",
+  faviconPath: "/favicon.svg?v=2",
 };
 
 export default site;
