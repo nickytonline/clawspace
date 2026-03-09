@@ -25,9 +25,11 @@ if (!absolutePath.startsWith(WORKSPACE_ROOT)) {
 }
 
 const ignoredPatterns = getIgnoredPatterns(WORKSPACE_ROOT);
+const showInternalFiles =
+  Astro.cookies.get("clawspace_show_internal_files")?.value === "true";
 
 // Check if path should be ignored
-if (shouldIgnore(relativePath, ignoredPatterns)) {
+if (shouldIgnore(relativePath, ignoredPatterns, { showInternalFiles })) {
   return new Response("Forbidden", { status: 403 });
 }
 
@@ -104,7 +106,9 @@ if (!isFile) {
   items = files
     .filter(
       (file) =>
-        !shouldIgnore(path.join(relativePath, file.name), ignoredPatterns)
+        !shouldIgnore(path.join(relativePath, file.name), ignoredPatterns, {
+          showInternalFiles,
+        })
     )
     .map((file) => {
       const itemPath = path.join(relativePath, file.name);

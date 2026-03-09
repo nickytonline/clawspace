@@ -39,18 +39,16 @@ By default, Clawspace serves from the parent of this app directory. For nonstand
 ```bash
 CLAWSPACE_ROOT=/absolute/path/to/workspace
 CLAWSPACE_IGNORE=".pnpm,dist,logs"
-SHOW_INTERNAL_CLAW_FILES=false
 ```
 
 Environment variables:
 
-| Variable                   | Default              | Description                                                                 |
-| -------------------------- | -------------------- | --------------------------------------------------------------------------- |
-| `CLAWSPACE_ROOT`           | `..` (parent of cwd) | Workspace root directory to browse/edit                                     |
-| `CLAWSPACE_IGNORE`         | _(empty)_            | Comma-separated extra ignore patterns (e.g. `".pnpm,dist,logs"`)            |
-| `SHOW_INTERNAL_CLAW_FILES` | `false`              | Set to `true` to show internal files (`SOUL.md`, `MEMORY.md`, `.env`, etc.) |
+| Variable           | Default              | Description                                                      |
+| ------------------ | -------------------- | ---------------------------------------------------------------- |
+| `CLAWSPACE_ROOT`   | `..` (parent of cwd) | Workspace root directory to browse/edit                          |
+| `CLAWSPACE_IGNORE` | _(empty)_            | Comma-separated extra ignore patterns (e.g. `".pnpm,dist,logs"`) |
 
-Internal files are blocked at the root level unless `SHOW_INTERNAL_CLAW_FILES=true`:
+Internal files are blocked at the root level by default. You can toggle visibility in `/settings`:
 
 - SOUL.md, AGENTS.md, IDENTITY.md, USER.md, NICK.md
 - MEMORY.md, HEARTBEAT.md, TOOLS.md, BOOTSTRAP.md

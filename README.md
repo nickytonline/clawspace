@@ -50,16 +50,20 @@ If you install it elsewhere, set `CLAWSPACE_ROOT` to an absolute path.
 # .env (see .env.example)
 CLAWSPACE_ROOT=/absolute/path/to/workspace
 CLAWSPACE_IGNORE=".pnpm,dist,logs"
-SHOW_INTERNAL_CLAW_FILES=false
 ```
 
 ### Environment variables
 
-| Variable                   | Default              | Description                                                                 |
-| -------------------------- | -------------------- | --------------------------------------------------------------------------- |
-| `CLAWSPACE_ROOT`           | `..` (parent of cwd) | Workspace root directory to browse/edit                                     |
-| `CLAWSPACE_IGNORE`         | _(empty)_            | Comma-separated extra ignore patterns (e.g. `".pnpm,dist,logs"`)            |
-| `SHOW_INTERNAL_CLAW_FILES` | `false`              | Set to `true` to show internal files (`SOUL.md`, `MEMORY.md`, `.env`, etc.) |
+| Variable           | Default              | Description                                                      |
+| ------------------ | -------------------- | ---------------------------------------------------------------- |
+| `CLAWSPACE_ROOT`   | `..` (parent of cwd) | Workspace root directory to browse/edit                          |
+| `CLAWSPACE_IGNORE` | _(empty)_            | Comma-separated extra ignore patterns (e.g. `".pnpm,dist,logs"`) |
+
+### Internal files visibility
+
+Internal root files are hidden by default (for example: `SOUL.md`, `MEMORY.md`, `.env`).
+
+You can now toggle their visibility from the UI at `/settings`.
 
 ### Ignore patterns
 
@@ -96,7 +100,6 @@ clawspace:
   environment:
     CLAWSPACE_ROOT: /claw/workspace
     CLAWSPACE_IGNORE: ".pnpm,dist,logs"
-    SHOW_INTERNAL_CLAW_FILES: "false"
   volumes:
     - ./openclaw-data/workspace:/claw/workspace
   ports:
@@ -114,7 +117,6 @@ docker build -t clawspace:local .
 docker run -p 6789:6789 \
   -e CLAWSPACE_ROOT=/claw/workspace \
   -e CLAWSPACE_IGNORE=".pnpm,dist,logs" \
-  -e SHOW_INTERNAL_CLAW_FILES=false \
   -v $(pwd)/openclaw-data/workspace:/claw/workspace \
   clawspace:local
 ```

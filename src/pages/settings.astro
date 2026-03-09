@@ -1,0 +1,76 @@
+---
+import WorkspaceLayout from "../layouts/WorkspaceLayout.astro";
+
+const showInternalFiles =
+  Astro.cookies.get("clawspace_show_internal_files")?.value === "true";
+---
+
+<WorkspaceLayout
+  title="⚙️ Settings"
+  metaDesc="Clawspace settings"
+  breadcrumbs={[
+    { label: "Workspace", href: "/" },
+    { label: "Settings", href: "/settings" },
+  ]}
+>
+  <section class="space-y-6">
+    <h1 class="text-2xl font-bold">Settings</h1>
+
+    <div class="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+      <ul class="space-y-3">
+        <li>
+          <label
+            for="toggle-internal-files"
+            class="flex items-start justify-between gap-4 cursor-pointer"
+          >
+            <div class="min-w-0">
+              <h2 id="setting-show-internal-files-label" class="font-semibold">
+                Show internal files
+              </h2>
+              <p
+                id="setting-show-internal-files-description"
+                class="text-gray-600 dark:text-gray-400"
+              >
+                Toggle visibility of root internal files like SOUL.md,
+                MEMORY.md, and .env.
+              </p>
+            </div>
+            <input
+              id="toggle-internal-files"
+              type="checkbox"
+              class="mt-1 h-5 w-5 shrink-0 accent-red-600"
+              aria-labelledby="setting-show-internal-files-label"
+              aria-describedby="setting-show-internal-files-description"
+              checked={showInternalFiles}
+            />
+          </label>
+        </li>
+      </ul>
+    </div>
+  </section>
+</WorkspaceLayout>
+
+<script is:inline>
+  function setCookie(name, value, days = 365) {
+    const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`;
+  }
+
+  function bindSettings() {
+    const input = document.getElementById("toggle-internal-files");
+    if (!(input instanceof HTMLInputElement) || input.dataset.bound === "true")
+      return;
+
+    input.dataset.bound = "true";
+
+    input.addEventListener("change", () => {
+      setCookie(
+        "clawspace_show_internal_files",
+        input.checked ? "true" : "false"
+      );
+    });
+  }
+
+  bindSettings();
+  document.addEventListener("astro:page-load", bindSettings);
+</script>

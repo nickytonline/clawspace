@@ -85,15 +85,16 @@ export function isInternalProtectedPath(relativePath: string): boolean {
 
 export function shouldIgnore(
   relativePath: string,
-  ignoredPatterns: string[]
+  ignoredPatterns: string[],
+  options: { showInternalFiles?: boolean } = {}
 ): boolean {
   const normalizedPath = relativePath
     .replace(/\\/g, "/")
     .replace(/^\/+|\/+$/g, "");
 
-  // Block root-level internal files from browsing (unless SHOW_INTERNAL_CLAW_FILES=true)
+  // Block root-level internal files from browsing by default.
   // Note: protected delete-only directories (e.g. memory/) remain view/edit-able.
-  const showInternal = process.env.SHOW_INTERNAL_CLAW_FILES === "true";
+  const showInternal = options.showInternalFiles === true;
   if (
     !showInternal &&
     !normalizedPath.includes("/") &&

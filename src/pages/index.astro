@@ -14,11 +14,15 @@ const WORKSPACE_ROOT = path.resolve(
 );
 
 const ignoredPatterns = getIgnoredPatterns(WORKSPACE_ROOT);
+const showInternalFiles =
+  Astro.cookies.get("clawspace_show_internal_files")?.value === "true";
 
 // Build root directory listing
 const files = fs.readdirSync(WORKSPACE_ROOT, { withFileTypes: true });
 const items = files
-  .filter((file) => !shouldIgnore(file.name, ignoredPatterns))
+  .filter(
+    (file) => !shouldIgnore(file.name, ignoredPatterns, { showInternalFiles })
+  )
   .map((file) => ({
     name: file.name,
     type: file.isDirectory() ? "directory" : "file",
@@ -42,15 +46,11 @@ const items = files
     >
       <h1 class="text-2xl font-bold mb-3">Welcome to your Clawspace!</h1>
       <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-        Browse all your workspace files and folders in one place. Internal
-        configuration files (like <code
-          class="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-base"
-          >SOUL.md</code
-        >,
-        <code
-          class="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-base"
-          >MEMORY.md</code
-        >, etc.) are kept private and won't show up here.
+        Browse all your workspace files and folders in one place. You can
+        show/hide internal configuration files from <a
+          href="/settings"
+          class="text-red-600 dark:text-red-400 hover:underline">Settings</a
+        >.
       </p>
     </div>
 

@@ -14,6 +14,15 @@ export default defineConfig({
   integrations: [expressiveCode(), mdx(), react()],
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      // Dev-only host allowlist for reverse-proxied access.
+      allowedHosts: [
+        "clawspace.maisonlab.dev",
+        ".maisonlab.dev",
+        "localhost",
+        "127.0.0.1",
+      ],
+    },
     resolve: {
       alias: {
         "@": "/src",

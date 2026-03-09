@@ -134,234 +134,262 @@ const { origin } = new URL(Astro.request.url);
               <span class="font-semibold">Clawspace</span>
             </a>
           </div>
-          <button
-            id="theme-toggle"
-            type="button"
-            aria-label="Toggle dark mode"
-            class="inline-flex hover:text-red-600 hover:dark:text-red-400 focus:text-red-600 focus:dark:text-red-400 focus:outline-none"
-          >
-            <svg
-              id="theme-toggle-dark-icon"
-              class="hidden w-6 h-6"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
+          <div class="flex items-center gap-3">
+            <a
+              href="/settings"
+              class="inline-flex hover:text-red-600 hover:dark:text-red-400 focus:text-red-600 focus:dark:text-red-400 focus:outline-none"
             >
-              <path
-                d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
-              ></path>
-            </svg>
-            <svg
-              id="theme-toggle-light-icon"
-              class="hidden w-6 h-6"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
+              <svg
+                class="w-5 h-5"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="3"></circle>
+                <path
+                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 .99-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 .99 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51.99H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                ></path>
+              </svg>
+              <span class="sr-only">Open settings</span>
+            </a>
+            <button
+              id="theme-toggle"
+              type="button"
+              aria-label="Toggle dark mode"
+              class="inline-flex hover:text-red-600 hover:dark:text-red-400 focus:text-red-600 focus:dark:text-red-400 focus:outline-none"
             >
-              <path
-                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                fill-rule="evenodd"
-                clip-rule="evenodd"></path>
-            </svg>
-          </button>
+              <svg
+                id="theme-toggle-dark-icon"
+                class="hidden w-6 h-6"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+                ></path>
+              </svg>
+              <svg
+                id="theme-toggle-light-icon"
+                class="hidden w-6 h-6"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"></path>
+              </svg>
+            </button>
+          </div>
         </div>
+
+        <!-- Breadcrumbs -->
+        {
+          breadcrumbs.length > 0 && (
+            <nav class="max-w-[65ch] lg:max-w-[70ch] mx-auto px-6 py-3 border-b border-gray-200 dark:border-gray-700">
+              <ol class="flex items-center gap-2 text-base">
+                {breadcrumbs.map((crumb, index) => (
+                  <li class="flex items-center gap-2">
+                    {index > 0 && <span class="text-gray-400">/</span>}
+                    {index === breadcrumbs.length - 1 ? (
+                      <span class="text-gray-600 dark:text-gray-400 font-medium">
+                        {crumb.label}
+                      </span>
+                    ) : (
+                      <a
+                        href={crumb.href}
+                        class="text-red-600 dark:text-red-400 hover:underline"
+                      >
+                        {crumb.label}
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )
+        }
+
+        <main
+          id="main"
+          tabindex="-1"
+          class="max-w-[65ch] lg:max-w-[70ch] mx-auto px-6 py-12 text-base lg:text-lg"
+        >
+          <slot />
+        </main>
+
+        <footer
+          class="pt-2 pb-8 text-center px-1 text-base text-gray-500 dark:text-gray-400"
+        >
+          made by <a
+            href="https://nickyt.online"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-red-600 dark:text-red-400 hover:underline"
+            >nickyt.online</a
+          >
+        </footer>
       </header>
 
-      <!-- Breadcrumbs -->
-      {
-        breadcrumbs.length > 0 && (
-          <nav class="max-w-[65ch] lg:max-w-[70ch] mx-auto px-6 py-3 border-b border-gray-200 dark:border-gray-700">
-            <ol class="flex items-center gap-2 text-base">
-              {breadcrumbs.map((crumb, index) => (
-                <li class="flex items-center gap-2">
-                  {index > 0 && <span class="text-gray-400">/</span>}
-                  {index === breadcrumbs.length - 1 ? (
-                    <span class="text-gray-600 dark:text-gray-400 font-medium">
-                      {crumb.label}
-                    </span>
-                  ) : (
-                    <a
-                      href={crumb.href}
-                      class="text-red-600 dark:text-red-400 hover:underline"
-                    >
-                      {crumb.label}
-                    </a>
-                  )}
-                </li>
-              ))}
-            </ol>
-          </nav>
-        )
-      }
+      <script>
+        let logoAnimationTimer: number | null = null;
 
-      <main
-        id="main"
-        tabindex="-1"
-        class="max-w-[65ch] lg:max-w-[70ch] mx-auto px-6 py-12 text-base lg:text-lg"
-      >
-        <slot />
-      </main>
-
-      <footer
-        class="pt-2 pb-8 text-center px-1 text-base text-gray-500 dark:text-gray-400"
-      >
-        made by <a
-          href="https://nickyt.online"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-red-600 dark:text-red-400 hover:underline"
-          >nickyt.online</a
-        >
-      </footer>
-    </div>
-
-    <script>
-      let logoAnimationTimer: number | null = null;
-
-      function parseDurationToMs(value: string): number {
-        const parsed = value.trim();
-        if (parsed.endsWith("ms")) {
-          const ms = Number.parseFloat(parsed);
-          return Number.isFinite(ms) ? ms : 0;
-        }
-        if (parsed.endsWith("s")) {
-          const seconds = Number.parseFloat(parsed);
-          return Number.isFinite(seconds) ? seconds * 1000 : 0;
-        }
-        const fallback = Number.parseFloat(parsed);
-        return Number.isFinite(fallback) ? fallback : 0;
-      }
-
-      function initLogoAnimation() {
-        const logo = document.getElementById(
-          "clawspace-logo"
-        ) as SVGElement | null;
-        if (!logo) return;
-
-        const hasAnimatedKey = "clawspace-logo-lobster-animated-v3";
-
-        if (logoAnimationTimer) {
-          window.clearTimeout(logoAnimationTimer);
-          logoAnimationTimer = null;
+        function parseDurationToMs(value: string): number {
+          const parsed = value.trim();
+          if (parsed.endsWith("ms")) {
+            const ms = Number.parseFloat(parsed);
+            return Number.isFinite(ms) ? ms : 0;
+          }
+          if (parsed.endsWith("s")) {
+            const seconds = Number.parseFloat(parsed);
+            return Number.isFinite(seconds) ? seconds * 1000 : 0;
+          }
+          const fallback = Number.parseFloat(parsed);
+          return Number.isFinite(fallback) ? fallback : 0;
         }
 
-        logo.classList.remove("lobster-crawl-in");
+        function initLogoAnimation() {
+          const logo = document.getElementById(
+            "clawspace-logo"
+          ) as SVGElement | null;
+          if (!logo) return;
 
-        if (localStorage.getItem(hasAnimatedKey) === "true") {
-          logo.classList.add("lobster-visible");
-          return;
-        }
+          const hasAnimatedKey = "clawspace-logo-lobster-animated-v3";
 
-        logo.classList.remove("lobster-visible");
+          if (logoAnimationTimer) {
+            window.clearTimeout(logoAnimationTimer);
+            logoAnimationTimer = null;
+          }
 
-        const delayValue = getComputedStyle(logo)
-          .getPropertyValue("--lobster-animation-delay")
-          .trim();
-        const delayMs = parseDurationToMs(delayValue || "1.5s");
+          logo.classList.remove("lobster-crawl-in");
 
-        logoAnimationTimer = window.setTimeout(() => {
-          localStorage.setItem(hasAnimatedKey, "true");
-          document.documentElement.classList.add("clawspace-logo-lobster-seen");
-          logo.classList.add("lobster-visible");
-          logo.classList.add("lobster-crawl-in");
-          logoAnimationTimer = null;
-        }, delayMs);
-      }
-
-      function initThemeToggle() {
-        setTimeout(() => {
-          const themeToggleDarkIcon = document.getElementById(
-            "theme-toggle-dark-icon"
-          );
-          const themeToggleLightIcon = document.getElementById(
-            "theme-toggle-light-icon"
-          );
-
-          if (!themeToggleDarkIcon || !themeToggleLightIcon) {
-            console.log("Theme icons not found");
+          if (localStorage.getItem(hasAnimatedKey) === "true") {
+            logo.classList.add("lobster-visible");
             return;
           }
 
-          // Show the correct icon based on current theme
-          const isDark =
-            localStorage.getItem("theme") === "dark" ||
-            (!("theme" in localStorage) &&
-              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          logo.classList.remove("lobster-visible");
 
-          if (isDark) {
-            themeToggleLightIcon.classList.remove("hidden");
-            themeToggleDarkIcon.classList.add("hidden");
-          } else {
-            themeToggleDarkIcon.classList.remove("hidden");
-            themeToggleLightIcon.classList.add("hidden");
-          }
+          const delayValue = getComputedStyle(logo)
+            .getPropertyValue("--lobster-animation-delay")
+            .trim();
+          const delayMs = parseDurationToMs(delayValue || "1.5s");
 
-          const themeToggleBtn = document.getElementById("theme-toggle");
-          if (!themeToggleBtn) return;
+          logoAnimationTimer = window.setTimeout(() => {
+            localStorage.setItem(hasAnimatedKey, "true");
+            document.documentElement.classList.add(
+              "clawspace-logo-lobster-seen"
+            );
+            logo.classList.add("lobster-visible");
+            logo.classList.add("lobster-crawl-in");
+            logoAnimationTimer = null;
+          }, delayMs);
+        }
 
-          // Remove old listeners by cloning
-          const newButton = themeToggleBtn.cloneNode(true) as HTMLElement;
-          themeToggleBtn.parentNode?.replaceChild(newButton, themeToggleBtn);
-
-          newButton.addEventListener("click", function () {
-            const darkIcon = document.getElementById("theme-toggle-dark-icon");
-            const lightIcon = document.getElementById(
+        function initThemeToggle() {
+          setTimeout(() => {
+            const themeToggleDarkIcon = document.getElementById(
+              "theme-toggle-dark-icon"
+            );
+            const themeToggleLightIcon = document.getElementById(
               "theme-toggle-light-icon"
             );
 
-            darkIcon?.classList.toggle("hidden");
-            lightIcon?.classList.toggle("hidden");
-
-            const currentTheme = localStorage.getItem("theme");
-            if (
-              currentTheme === "light" ||
-              (!currentTheme &&
-                !document.documentElement.classList.contains("dark"))
-            ) {
-              document.documentElement.classList.add("dark");
-              localStorage.setItem("theme", "dark");
-            } else {
-              document.documentElement.classList.remove("dark");
-              localStorage.setItem("theme", "light");
+            if (!themeToggleDarkIcon || !themeToggleLightIcon) {
+              console.log("Theme icons not found");
+              return;
             }
-          });
-        }, 0);
-      }
 
-      // Initial load
-      initLogoAnimation();
-      initThemeToggle();
+            // Show the correct icon based on current theme
+            const isDark =
+              localStorage.getItem("theme") === "dark" ||
+              (!("theme" in localStorage) &&
+                window.matchMedia("(prefers-color-scheme: dark)").matches);
 
-      // Astro view transitions
-      document.addEventListener("astro:page-load", initLogoAnimation);
-      document.addEventListener("astro:page-load", initThemeToggle);
-    </script>
+            if (isDark) {
+              themeToggleLightIcon.classList.remove("hidden");
+              themeToggleDarkIcon.classList.add("hidden");
+            } else {
+              themeToggleDarkIcon.classList.remove("hidden");
+              themeToggleLightIcon.classList.add("hidden");
+            }
 
-    <style>
-      #clawspace-logo #clawspace-logo-lobster-group {
-        opacity: 0;
-      }
+            const themeToggleBtn = document.getElementById("theme-toggle");
+            if (!themeToggleBtn) return;
 
-      .lobster-visible #clawspace-logo-lobster-group,
-      .clawspace-logo-lobster-seen
-        #clawspace-logo
-        #clawspace-logo-lobster-group {
-        opacity: 1;
-      }
+            // Remove old listeners by cloning
+            const newButton = themeToggleBtn.cloneNode(true) as HTMLElement;
+            themeToggleBtn.parentNode?.replaceChild(newButton, themeToggleBtn);
 
-      .lobster-crawl-in #clawspace-logo-lobster-group {
-        animation: lobster-crawl-in 900ms ease-out both;
-      }
+            newButton.addEventListener("click", function () {
+              const darkIcon = document.getElementById(
+                "theme-toggle-dark-icon"
+              );
+              const lightIcon = document.getElementById(
+                "theme-toggle-light-icon"
+              );
 
-      @keyframes lobster-crawl-in {
-        from {
-          transform: translateX(-40px);
+              darkIcon?.classList.toggle("hidden");
+              lightIcon?.classList.toggle("hidden");
+
+              const currentTheme = localStorage.getItem("theme");
+              if (
+                currentTheme === "light" ||
+                (!currentTheme &&
+                  !document.documentElement.classList.contains("dark"))
+              ) {
+                document.documentElement.classList.add("dark");
+                localStorage.setItem("theme", "dark");
+              } else {
+                document.documentElement.classList.remove("dark");
+                localStorage.setItem("theme", "light");
+              }
+            });
+          }, 0);
         }
 
-        to {
-          transform: translateX(0);
+        // Initial load
+        initLogoAnimation();
+        initThemeToggle();
+
+        // Astro view transitions
+        document.addEventListener("astro:page-load", initLogoAnimation);
+        document.addEventListener("astro:page-load", initThemeToggle);
+      </script>
+
+      <style>
+        #clawspace-logo #clawspace-logo-lobster-group {
+          opacity: 0;
         }
-      }
-    </style>
+
+        .lobster-visible #clawspace-logo-lobster-group,
+        .clawspace-logo-lobster-seen
+          #clawspace-logo
+          #clawspace-logo-lobster-group {
+          opacity: 1;
+        }
+
+        .lobster-crawl-in #clawspace-logo-lobster-group {
+          animation: lobster-crawl-in 900ms ease-out both;
+        }
+
+        @keyframes lobster-crawl-in {
+          from {
+            transform: translateX(-40px);
+          }
+
+          to {
+            transform: translateX(0);
+          }
+        }
+      </style>
+    </div>
   </body>
 </html>

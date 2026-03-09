@@ -1,0 +1,22 @@
+---
+interface Props {
+  id: string;
+  checked?: boolean;
+  label?: string;
+}
+
+const { id, checked = false, label = "Toggle" } = Astro.props;
+---
+
+<label class="inline-flex items-center" for={id}>
+  <input id={id} type="checkbox" class="peer sr-only" checked={checked} />
+  <span
+    class="relative h-6 w-11 rounded-full border border-gray-300 bg-gray-200 transition-colors peer-checked:border-red-600 peer-checked:bg-red-600 peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-red-400 dark:border-gray-600 dark:bg-gray-700"
+    aria-hidden="true"
+  >
+    <span
+      class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform peer-checked:translate-x-5"
+    ></span>
+  </span>
+  <span class="sr-only">{label}</span>
+</label>
