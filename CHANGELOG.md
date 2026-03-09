@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/nickytonline/clawspace/compare/v1.2.0...v2.0.0) (2026-03-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* SHOW_INTERNAL_CLAW_FILES has been removed. Internal file visibility is now controlled via the /settings UI.
+
+### Features
+
+* move internal files visibility to settings page ([62570d9](https://github.com/nickytonline/clawspace/commit/62570d9c7606e4c8bb439892eb1f3ba69d99770c))
+
 ## [1.2.0](https://github.com/nickytonline/clawspace/compare/v1.1.0...v1.2.0) (2026-03-09)
 
 
