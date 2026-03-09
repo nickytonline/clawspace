@@ -83,6 +83,15 @@ const { origin } = new URL(Astro.request.url);
         } else {
           ev.newDocument.documentElement.classList.remove("dark");
         }
+
+        if (
+          hasLocalStorage &&
+          localStorage.getItem("clawspace-logo-lobster-animated-v3") === "true"
+        ) {
+          ev.newDocument.documentElement.classList.add(
+            "clawspace-logo-lobster-seen"
+          );
+        }
       });
     </script>
   </head>
