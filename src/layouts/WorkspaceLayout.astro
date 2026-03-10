@@ -133,6 +133,28 @@ const { origin } = new URL(Astro.request.url);
               </svg>
               <span class="font-semibold">Clawspace</span>
             </a>
+            <a
+              href="/timeline"
+              class="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:underline inline-flex items-center"
+              aria-label="Timeline"
+              title="Timeline"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-5 w-5 md:hidden"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span class="sr-only md:not-sr-only md:inline">Timeline</span>
+            </a>
           </div>
           <div class="flex items-center gap-3">
             <a

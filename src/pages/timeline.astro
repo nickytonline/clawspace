@@ -1,0 +1,53 @@
+---
+import WorkspaceLayout from "../layouts/WorkspaceLayout.astro";
+import TimelineExplorer from "../components/workspace/TimelineExplorer";
+import { getTimelinePage } from "../lib/workspace-timeline";
+import path from "node:path";
+
+const WORKSPACE_ROOT = path.resolve(
+  process.env.CLAWSPACE_ROOT ?? path.resolve(process.cwd(), "..")
+);
+
+const PAGE_SIZE = 30;
+const showInternalFiles =
+  Astro.cookies.get("clawspace_show_internal_files")?.value === "true";
+
+const selectedFolders = (Astro.url.searchParams.get("folders") ?? "")
+  .split(",")
+  .map((part) => part.trim())
+  .filter(Boolean);
+
+const initialPage = getTimelinePage({
+  workspaceRoot: WORKSPACE_ROOT,
+  folders: selectedFolders,
+  limit: PAGE_SIZE,
+  showInternalFiles,
+});
+---
+
+<WorkspaceLayout
+  title="⏱️ Workspace Timeline"
+  metaDesc="A live timeline of workspace changes and updates across your workspace."
+  breadcrumbs={[
+    { label: "Workspace", href: "/" },
+    { label: "Timeline", href: "/timeline" },
+  ]}
+>
+  <section class="space-y-5">
+    <h1 class="text-3xl font-bold">Workspace Timeline</h1>
+    <p class="text-muted-foreground">
+      Live timeline of file changes across the workspace. Filter by top-level
+      folders to focus on what matters.
+    </p>
+
+    <TimelineExplorer
+      client:load
+      initialEvents={initialPage.events}
+      initialNextCursor={initialPage.nextCursor}
+      initialSelectedFolders={selectedFolders}
+      availableFolders={initialPage.availableFolders}
+      pageSize={PAGE_SIZE}
+      showInternalFiles={showInternalFiles}
+    />
+  </section>
+</WorkspaceLayout>
