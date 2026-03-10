@@ -134,6 +134,29 @@ const { origin } = new URL(Astro.request.url);
               <span class="hidden md:inline">Clawspace</span>
             </a>
             <a
+              href="/workspace"
+              class="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:underline inline-flex items-center"
+              aria-label="Workspace"
+              title="Workspace"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-5 w-5 md:hidden"
+                aria-hidden="true"
+              >
+                <path d="M3 7h5l2 2h11v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"
+                ></path>
+                <path d="M3 7a2 2 0 0 1 2-2h4l2 2"></path>
+              </svg>
+              <span class="sr-only md:not-sr-only md:inline">Workspace</span>
+            </a>
+            <a
               href="/timeline"
               class="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:underline inline-flex items-center"
               aria-label="Timeline"
