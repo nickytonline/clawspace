@@ -105,10 +105,10 @@ const { origin } = new URL(Astro.request.url);
         <div
           class="max-w-[65ch] lg:max-w-[70ch] mx-auto px-6 py-4 flex justify-between items-center"
         >
-          <div class="flex items-center gap-6">
+          <div class="flex items-center gap-4 md:gap-6">
             <a
               href="/"
-              class="flex items-center gap-2 text-base text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors no-underline"
+              class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors no-underline"
             >
               <svg
                 id="clawspace-logo"
@@ -131,7 +131,7 @@ const { origin } = new URL(Astro.request.url);
                   >
                 </g>
               </svg>
-              <span class="font-semibold">Clawspace</span>
+              <span class="hidden md:inline">Clawspace</span>
             </a>
             <a
               href="/timeline"
