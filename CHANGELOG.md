@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.1.0](https://github.com/nickytonline/clawspace/compare/v2.0.0...v2.1.0) (2026-03-10)
+
+
+### Features
+
+* **settings:** add default home view preference ([ead516d](https://github.com/nickytonline/clawspace/commit/ead516dfc6086be89715a173ad5b167993063661))
+* **timeline:** add workspace timeline page and interactions ([38b5646](https://github.com/nickytonline/clawspace/commit/38b564623bbb9773d31af6d5116069abf792e50e))
+* **workspace:** add dedicated workspace page and header navigation ([6a57c13](https://github.com/nickytonline/clawspace/commit/6a57c1383660dcdc322f41784e10e1002d96d26f))
+
+
+### Bug Fixes
+
+* **header:** refine timeline nav responsive alignment ([1be1a9f](https://github.com/nickytonline/clawspace/commit/1be1a9f20a93f72d323d5dfc88389eede4b84884))
+* **settings:** use span instead of h2 for setting item label ([122133a](https://github.com/nickytonline/clawspace/commit/122133a1f8e65bbec3b4f19193c3977fd7d68cb7))
+* **timeline:** shorten page title and heading ([6dc73a9](https://github.com/nickytonline/clawspace/commit/6dc73a94f4d106dc9c436f6ecc7afa5618951f6b))
+
 ## [2.0.0](https://github.com/nickytonline/clawspace/compare/v1.2.0...v2.0.0) (2026-03-09)
 
 
