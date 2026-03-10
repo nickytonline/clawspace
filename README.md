@@ -6,7 +6,9 @@ Clawspace is a browser-based file explorer/editor for an OpenClaw workspace.
 
 It gives you:
 
-- File and directory browsing
+- File and directory browsing (`/workspace`)
+- Timeline view (`/timeline`) with folder filters and pagination
+- Configurable default home view for `/` (Files or Timeline)
 - Monaco editor for text files
 - Save/revert/copy actions
 - Auto-format on blur (supported file types)
@@ -63,7 +65,14 @@ CLAWSPACE_IGNORE=".pnpm,dist,logs"
 
 Internal root files are hidden by default (for example: `SOUL.md`, `MEMORY.md`, `.env`).
 
-You can now toggle their visibility from the UI at `/settings`.
+You can toggle their visibility from the UI at `/settings`.
+
+### Home and navigation behavior
+
+- `/workspace` is the dedicated file browser page.
+- `/timeline` is the dedicated timeline page.
+- `/` renders based on the **Default home view** setting in `/settings`.
+- Header navigation includes both **Workspace** and **Timeline** links.
 
 ### Ignore patterns
 
