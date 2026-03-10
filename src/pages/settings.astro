@@ -3,6 +3,10 @@ import WorkspaceLayout from "../layouts/WorkspaceLayout.astro";
 
 const showInternalFiles =
   Astro.cookies.get("clawspace_show_internal_files")?.value === "true";
+const defaultHomeView =
+  Astro.cookies.get("clawspace_default_home_view")?.value === "timeline"
+    ? "timeline"
+    : "files";
 ---
 
 <WorkspaceLayout
@@ -17,7 +21,7 @@ const showInternalFiles =
     <h1 class="text-2xl font-bold">Settings</h1>
 
     <div class="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-      <ul class="space-y-3">
+      <ul class="space-y-5">
         <li>
           <label
             for="toggle-internal-files"
@@ -48,6 +52,56 @@ const showInternalFiles =
             />
           </label>
         </li>
+
+        <li class="space-y-2">
+          <div class="min-w-0">
+            <span id="setting-default-view-label" class="block font-semibold">
+              Default home view
+            </span>
+            <p
+              id="setting-default-view-description"
+              class="text-gray-600 dark:text-gray-400"
+            >
+              Choose whether the home page opens in Files or Timeline view.
+            </p>
+          </div>
+
+          <div
+            class="flex gap-4"
+            role="radiogroup"
+            aria-labelledby="setting-default-view-label"
+            aria-describedby="setting-default-view-description"
+          >
+            <label
+              for="default-view-files"
+              class="inline-flex items-center gap-2 cursor-pointer"
+            >
+              <input
+                id="default-view-files"
+                type="radio"
+                name="default-home-view"
+                value="files"
+                class="h-4 w-4 accent-red-600"
+                checked={defaultHomeView === "files"}
+              />
+              <span>Files</span>
+            </label>
+            <label
+              for="default-view-timeline"
+              class="inline-flex items-center gap-2 cursor-pointer"
+            >
+              <input
+                id="default-view-timeline"
+                type="radio"
+                name="default-home-view"
+                value="timeline"
+                class="h-4 w-4 accent-red-600"
+                checked={defaultHomeView === "timeline"}
+              />
+              <span>Timeline</span>
+            </label>
+          </div>
+        </li>
       </ul>
     </div>
   </section>
@@ -61,17 +115,29 @@ const showInternalFiles =
 
   function bindSettings() {
     const input = document.getElementById("toggle-internal-files");
-    if (!(input instanceof HTMLInputElement) || input.dataset.bound === "true")
-      return;
+    if (input instanceof HTMLInputElement && input.dataset.bound !== "true") {
+      input.dataset.bound = "true";
 
-    input.dataset.bound = "true";
+      input.addEventListener("change", () => {
+        setCookie(
+          "clawspace_show_internal_files",
+          input.checked ? "true" : "false"
+        );
+      });
+    }
 
-    input.addEventListener("change", () => {
-      setCookie(
-        "clawspace_show_internal_files",
-        input.checked ? "true" : "false"
-      );
-    });
+    document
+      .querySelectorAll('input[name="default-home-view"]')
+      .forEach((radio) => {
+        if (!(radio instanceof HTMLInputElement)) return;
+        if (radio.dataset.bound === "true") return;
+
+        radio.dataset.bound = "true";
+        radio.addEventListener("change", () => {
+          if (!radio.checked) return;
+          setCookie("clawspace_default_home_view", radio.value);
+        });
+      });
   }
 
   bindSettings();

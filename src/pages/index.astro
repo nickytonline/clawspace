@@ -5,6 +5,8 @@ import {
   isInternalProtectedPath,
   shouldIgnore,
 } from "../lib/ignore";
+import TimelineExplorer from "../components/workspace/TimelineExplorer";
+import { getTimelinePage } from "../lib/workspace-timeline";
 import fs from "fs";
 import path from "path";
 
@@ -16,6 +18,10 @@ const WORKSPACE_ROOT = path.resolve(
 const ignoredPatterns = getIgnoredPatterns(WORKSPACE_ROOT);
 const showInternalFiles =
   Astro.cookies.get("clawspace_show_internal_files")?.value === "true";
+const defaultHomeView =
+  Astro.cookies.get("clawspace_default_home_view")?.value === "timeline"
+    ? "timeline"
+    : "files";
 
 // Build root directory listing
 const files = fs.readdirSync(WORKSPACE_ROOT, { withFileTypes: true });
@@ -33,6 +39,16 @@ const items = files
     if (a.type !== b.type) return a.type === "directory" ? -1 : 1;
     return a.name.localeCompare(b.name);
   });
+
+const timelinePage =
+  defaultHomeView === "timeline"
+    ? getTimelinePage({
+        workspaceRoot: WORKSPACE_ROOT,
+        folders: [],
+        limit: 30,
+        showInternalFiles,
+      })
+    : null;
 ---
 
 <WorkspaceLayout
@@ -57,63 +73,77 @@ const items = files
       </p>
     </div>
 
-    <ul class="space-y-2">
-      {
-        items.map((item) => (
-          <li class="row-item px-2 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 focus-within:bg-gray-50 dark:focus-within:bg-gray-800 transition-colors">
-            <div class="flex items-center justify-between gap-3 py-2">
-              <a
-                href={`/${item.path}`}
-                data-astro-reload={item.type === "file" ? true : undefined}
-                class="row-link flex items-center text-red-600 dark:text-red-400 hover:underline min-w-0"
-              >
-                <span class="text-xl mr-2">
-                  {item.type === "directory" ? "📂" : "📄"}
-                </span>
-                <span class="truncate">
-                  {item.name}
-                  {item.type === "directory" ? "/" : ""}
-                </span>
-              </a>
-              {item.canDelete && (
-                <button
-                  type="button"
-                  class="delete-entry-btn row-delete-btn p-2 rounded border border-red-300 text-red-700 hover:bg-red-50 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-900/30"
-                  data-path={item.path}
-                  data-type={item.type}
-                  aria-label={`Delete ${item.type === "directory" ? "folder" : "file"} ${item.name}`}
-                  title="Delete"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M3 6h18" />
-                    <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                    <path d="M10 11v6" />
-                    <path d="M14 11v6" />
-                  </svg>
-                  <span class="sr-only">Delete</span>
-                </button>
-              )}
-            </div>
-          </li>
-        ))
-      }
-    </ul>
-
     {
-      items.length === 0 && (
-        <p class="text-gray-500 dark:text-gray-400 italic">Empty directory</p>
+      defaultHomeView === "timeline" && timelinePage ? (
+        <TimelineExplorer
+          client:load
+          initialEvents={timelinePage.events}
+          initialNextCursor={timelinePage.nextCursor}
+          initialSelectedFolders={[]}
+          availableFolders={timelinePage.availableFolders}
+          pageSize={30}
+          showInternalFiles={showInternalFiles}
+        />
+      ) : (
+        <>
+          <ul class="space-y-2">
+            {items.map((item) => (
+              <li class="row-item px-2 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 focus-within:bg-gray-50 dark:focus-within:bg-gray-800 transition-colors">
+                <div class="flex items-center justify-between gap-3 py-2">
+                  <a
+                    href={`/${item.path}`}
+                    data-astro-reload={item.type === "file" ? true : undefined}
+                    class="row-link flex items-center text-red-600 dark:text-red-400 hover:underline min-w-0"
+                  >
+                    <span class="text-xl mr-2">
+                      {item.type === "directory" ? "📂" : "📄"}
+                    </span>
+                    <span class="truncate">
+                      {item.name}
+                      {item.type === "directory" ? "/" : ""}
+                    </span>
+                  </a>
+                  {item.canDelete && (
+                    <button
+                      type="button"
+                      class="delete-entry-btn row-delete-btn p-2 rounded border border-red-300 text-red-700 hover:bg-red-50 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-900/30"
+                      data-path={item.path}
+                      data-type={item.type}
+                      aria-label={`Delete ${item.type === "directory" ? "folder" : "file"} ${item.name}`}
+                      title="Delete"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M3 6h18" />
+                        <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                        <path d="M10 11v6" />
+                        <path d="M14 11v6" />
+                      </svg>
+                      <span class="sr-only">Delete</span>
+                    </button>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          {items.length === 0 && (
+            <p class="text-gray-500 dark:text-gray-400 italic">
+              Empty directory
+            </p>
+          )}
+        </>
       )
     }
   </div>
