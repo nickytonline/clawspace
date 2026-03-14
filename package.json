@@ -24,7 +24,7 @@
     "@astrojs/netlify": "^6.6.5",
     "@astrojs/node": "^9.5.5",
     "@astrojs/react": "^5.0.0",
-    "@astrojs/rss": "^4.0.15",
+    "@astrojs/rss": "^4.0.17",
     "@astrojs/sitemap": "^3.7.0",
     "@expressive-code/plugin-line-numbers": "^0.41.6",
     "@fontsource/inter": "^5.2.8",
