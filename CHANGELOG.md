@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.2.0](https://github.com/nickytonline/clawspace/compare/v2.1.0...v2.2.0) (2026-03-29)
+
+
+### Features
+
+* add active page styling to workspace header nav links ([9742205](https://github.com/nickytonline/clawspace/commit/97422059ee669165fbe260faa7e5a48bd74a232e))
+
+
+### Bug Fixes
+
+* align vite-plus version in package-lock.json with package.json ([5652f4d](https://github.com/nickytonline/clawspace/commit/5652f4daa795a8569fa2333300c4f2fb4056a68e))
+
 ## [2.1.0](https://github.com/nickytonline/clawspace/compare/v2.0.0...v2.1.0) (2026-03-10)
 
 
