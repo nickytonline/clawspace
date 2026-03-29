@@ -5,6 +5,8 @@ import SkipLink from "../components/SkipLink.astro";
 import site from "@/data/site";
 import { ClientRouter } from "astro:transitions";
 
+const pathname = new URL(Astro.request.url).pathname;
+
 interface Props {
   title: string;
   metaDesc?: string;
@@ -108,7 +110,13 @@ const { origin } = new URL(Astro.request.url);
           <div class="flex items-center gap-4 md:gap-6">
             <a
               href="/"
-              class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors no-underline"
+              class:list={[
+                "flex items-center gap-2 text-sm font-medium hover:text-red-600 dark:hover:text-red-400 hover:underline transition-colors no-underline",
+                pathname === "/"
+                  ? "text-red-600 dark:text-red-400 !underline"
+                  : "text-gray-600 dark:text-gray-400",
+              ]}
+              aria-current={pathname === "/" ? "page" : undefined}
             >
               <svg
                 id="clawspace-logo"
@@ -135,9 +143,17 @@ const { origin } = new URL(Astro.request.url);
             </a>
             <a
               href="/workspace"
-              class="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:underline inline-flex items-center"
+              class:list={[
+                "text-sm font-medium hover:text-red-600 dark:hover:text-red-400 hover:underline inline-flex items-center",
+                pathname.startsWith("/workspace")
+                  ? "text-red-600 dark:text-red-400 underline"
+                  : "text-gray-600 dark:text-gray-400",
+              ]}
               aria-label="Workspace"
               title="Workspace"
+              aria-current={pathname.startsWith("/workspace")
+                ? "page"
+                : undefined}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -158,9 +174,17 @@ const { origin } = new URL(Astro.request.url);
             </a>
             <a
               href="/timeline"
-              class="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:underline inline-flex items-center"
+              class:list={[
+                "text-sm font-medium hover:text-red-600 dark:hover:text-red-400 hover:underline inline-flex items-center",
+                pathname.startsWith("/timeline")
+                  ? "text-red-600 dark:text-red-400 underline"
+                  : "text-gray-600 dark:text-gray-400",
+              ]}
               aria-label="Timeline"
               title="Timeline"
+              aria-current={pathname.startsWith("/timeline")
+                ? "page"
+                : undefined}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -182,7 +206,15 @@ const { origin } = new URL(Astro.request.url);
           <div class="flex items-center gap-3">
             <a
               href="/settings"
-              class="inline-flex hover:text-red-600 hover:dark:text-red-400 focus:text-red-600 focus:dark:text-red-400 focus:outline-none"
+              class:list={[
+                "inline-flex hover:text-red-600 hover:dark:text-red-400 focus:text-red-600 focus:dark:text-red-400 focus:outline-none",
+                pathname.startsWith("/settings")
+                  ? "text-red-600 dark:text-red-400"
+                  : "",
+              ]}
+              aria-current={pathname.startsWith("/settings")
+                ? "page"
+                : undefined}
             >
               <svg
                 class="w-5 h-5"
