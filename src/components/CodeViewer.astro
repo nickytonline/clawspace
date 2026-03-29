@@ -995,7 +995,7 @@ const {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // oxlint-disable-next-line @typescript-eslint/no-unused-vars
   function toggleEditorSettings(button) {
     const menu = button.closest(".settings-menu");
     const panel = menu?.querySelector(".settings-panel");
@@ -1006,7 +1006,7 @@ const {
     if (isHidden) panel.classList.remove("hidden");
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // oxlint-disable-next-line @typescript-eslint/no-unused-vars
   function toggleWordWrapSetting(input) {
     const root = input.closest(".code-viewer");
     const state = editors.get(root);
@@ -1014,7 +1014,7 @@ const {
     applyWordWrap(root, state, settings.wordWrap);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // oxlint-disable-next-line @typescript-eslint/no-unused-vars
   function toggleMarkdownDefaultView(select) {
     const root = select.closest(".code-viewer");
     const state = editors.get(root);
@@ -1023,7 +1023,7 @@ const {
     syncSettingsPanel(root, settings);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // oxlint-disable-next-line @typescript-eslint/no-unused-vars
   function switchEditorTab(button, tab) {
     const root = button.closest(".code-viewer");
     if (!isMarkdownRoot(root)) return;
@@ -1040,7 +1040,7 @@ const {
     return button.closest(".code-viewer");
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // oxlint-disable-next-line @typescript-eslint/no-unused-vars
   async function saveEditor(button) {
     const root = getRootFromButton(button);
     const state = editors.get(root);
@@ -1068,7 +1068,7 @@ const {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // oxlint-disable-next-line @typescript-eslint/no-unused-vars
   async function deleteEditorFile(button) {
     const root = getRootFromButton(button);
     const filePath = root?.getAttribute("data-file-path") || "";
@@ -1108,7 +1108,7 @@ const {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // oxlint-disable-next-line @typescript-eslint/no-unused-vars
   function revertEditor(button) {
     const root = getRootFromButton(button);
     const state = editors.get(root);
@@ -1123,7 +1123,7 @@ const {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // oxlint-disable-next-line @typescript-eslint/no-unused-vars
   async function copyToClipboard(button) {
     const root = getRootFromButton(button);
     const state = editors.get(root);

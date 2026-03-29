@@ -15,17 +15,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Vite+
+        uses: voidzero-dev/setup-vp@v1
         with:
-          node-version-file: package.json
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
+          cache: true
 
       - name: Build
-        run: npm run build
+        run: vp run build
 
   docker:
     runs-on: ubuntu-latest

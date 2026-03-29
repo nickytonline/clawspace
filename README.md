@@ -22,17 +22,27 @@ Clawspace is designed to run on your LAN, or behind a trusted auth proxy (for ex
 
 ## Install
 
+### Install the Vite+ CLI (one-time setup)
+
+```bash
+curl -fsSL https://vite.plus | bash
+```
+
+See the [Vite+ guide](https://viteplus.dev/guide/) for more details.
+
+### Install the dependencies
+
 ```bash
 git clone https://github.com/nickytonline/clawspace
 cd clawspace
-npm install
+vp install
 ```
 
 ## Quick start
 
 ```bash
-npm run build
-npm run clawspace:serve
+vp run build
+vp run clawspace:serve
 ```
 
 Default port is `6789`.
@@ -40,7 +50,7 @@ Default port is `6789`.
 ## Development
 
 ```bash
-npm run dev
+vp run dev
 ```
 
 ## Configuration
@@ -85,8 +95,8 @@ Files and directories are hidden from browsing and blocked from the save API usi
 
 ## Scripts
 
-- `npm run build` → runs SSR build (`dist/server/entry.mjs`)
-- `npm run clawspace:serve` → serves production SSR build on port 6789
+- `vp run build` → runs SSR build (`dist/server/entry.mjs`)
+- `vp run clawspace:serve` → serves production SSR build on port 6789
 - `./scripts/serve.sh [port]` → serve on optional port
 
 ## OpenClaw integration
