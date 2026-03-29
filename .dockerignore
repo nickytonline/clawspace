@@ -4,5 +4,6 @@ node_modules
 .env.*
 .git
 .gitignore
+.claude
 README-WORKSPACE.md
 logs
