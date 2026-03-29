@@ -7,8 +7,9 @@ PORT="${1:-6789}"
 cd "$(dirname "$0")/.."
 
 if [ ! -f "dist/server/entry.mjs" ]; then
-  echo "No SSR build found. Building Clawspace first..."
-  ./scripts/build.sh
+  echo "No SSR build found. Installing dependencies and building Clawspace..."
+  npm install
+  vp run build
 fi
 
 if [ -f "/claw/workspace/.env" ]; then
