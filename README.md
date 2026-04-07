@@ -7,9 +7,18 @@ Clawspace is a browser-based file explorer/editor for an OpenClaw workspace.
 It gives you:
 
 - File and directory browsing (`/workspace`)
+
+  ![Workspace file browser showing folders and files](./public/assets/workspace.png)
+
 - Timeline view (`/timeline`) with folder filters and pagination
+
+  ![Timeline view showing live file changes with folder filters](./public/assets/timeline.png)
+
 - Configurable default home view for `/` (Files or Timeline)
 - Monaco editor for text files
+
+  ![Viewing and editing a file with edit and preview modes](./public/assets/file-viewer.gif)
+
 - Save/revert/copy actions
 - Auto-format on blur (supported file types)
 - Basic hardening for writes (path checks, blocked files, audit log)
