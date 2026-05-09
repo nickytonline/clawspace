@@ -30,7 +30,7 @@
     "@fontsource/inter": "^5.2.8",
     "@fontsource/space-grotesk": "^5.2.10",
     "@github/relative-time-element": "^5.0.0",
-    "@tanstack/react-query": "^5.97.0",
+    "@tanstack/react-query": "^5.100.9",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@varlock/astro-integration": "^0.2.7",
