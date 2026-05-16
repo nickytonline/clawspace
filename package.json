@@ -19,7 +19,7 @@
     "prepare": "vp config"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.8",
+    "@astrojs/check": "^0.9.9",
     "@astrojs/mdx": "^5.0.3",
     "@astrojs/netlify": "^7.0.8",
     "@astrojs/node": "^10.0.6",
