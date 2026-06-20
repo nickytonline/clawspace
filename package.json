@@ -29,7 +29,7 @@
     "@expressive-code/plugin-line-numbers": "^0.42.0",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/space-grotesk": "^5.2.10",
-    "@github/relative-time-element": "^5.0.0",
+    "@github/relative-time-element": "^5.2.0",
     "@tanstack/react-query": "^5.101.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
