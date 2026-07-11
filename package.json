@@ -52,7 +52,7 @@
     "tailwind-merge": "^3.6.0",
     "typescript": "^6.0.3",
     "unist-util-visit": "^5.1.0",
-    "varlock": "^0.7.4"
+    "varlock": "^1.10.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.2.4",
