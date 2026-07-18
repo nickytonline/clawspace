@@ -33,7 +33,7 @@
     "@tanstack/react-query": "^5.101.2",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "@varlock/astro-integration": "^0.2.7",
+    "@varlock/astro-integration": "^1.2.0",
     "astro": "^6.4.6",
     "astro-expressive-code": "^0.44.0",
     "class-variance-authority": "^0.7.1",
